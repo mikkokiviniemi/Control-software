@@ -24,7 +24,7 @@ Project flow and management will be done using GitHub projects.
 - communication with sensors & UI
 - unit tests
 
-  
+  ![software flowchart](https://github.com/mikkokiviniemi/Control-software/blob/An-Man-patch-1/d6f0b768-059a-4389-a8e0-07641b3c305a.jpg?raw=true)
   
  ### Possible additional functionalities:
 - energy consumption data as output
