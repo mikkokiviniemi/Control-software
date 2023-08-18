@@ -33,6 +33,7 @@ Project flow and management will be done using GitHub projects.
 
 ## ESTIMATED TIMELINE
 - Day 1: project launch, Github project setup, planning the structure of SW, assignment of responsibilities to persons
+- Day 1 (continued): start research into data API's and sensor spec-sheets
 - Day 2: creating dummy data and data conversion tools, starting working on communication with sensors & UI
 - Day 3: working communication, starting automatic control system and manual controls
 - Day 4: failure detection, continue building control and communication systems
