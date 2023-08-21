@@ -73,12 +73,15 @@ JSON Commands:
 int main()
 {
     bool systems_online{ true };
+    uint8_t speed_of_conveyor = 0x00;
+    uint8_t heaters_cooler = 0x00;
+    uint8_t camera_toggle = 0x00;
 
-    bool manual_heaters{ false };
+    /*bool manual_heaters{ false };
     bool manual_cooler{ false };
     bool manual_conveyor{ false };
     bool qc_camera{ false };
-
+    */
     
 
     while (systems_online)
@@ -102,9 +105,7 @@ int main()
         }
 
 
-        test_func();
-
-        systems_online = false;
+        ui_loop(systems_online, speed_of_conveyor, heaters_cooler, camera_toggle);
 
     }
 
