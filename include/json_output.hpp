@@ -15,7 +15,7 @@ json output_data = {
     {"heater_3", false},
     {"cooler", false},
     {"qc_camera_status", false},
-    {"temp_sensors", {0.0f, 0.0f, 0.0f}}, // tai sitten näin mutta 16 kpl
+    {"temp_sensors", {0.0f, 0.0f, 0.0f}}, // tai sitten näin mutta 10 kpl
     //...
 };
 
