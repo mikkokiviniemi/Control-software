@@ -2,7 +2,9 @@
 #define TEXT_UI_HPP
 
 #include <stdint.h>
+#include "../external/json.hpp"
 
+using json = nlohmann::json;
 //Control data structure
 struct control_data {
     uint8_t speed_of_conveyor;
@@ -11,6 +13,9 @@ struct control_data {
 };
 
 control_data ui_loop(bool &display_ui);
+
+void json_ui(json &output, const json &input, const json &input_2);
+
 
 #endif
 
