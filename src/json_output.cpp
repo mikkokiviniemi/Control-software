@@ -4,9 +4,6 @@
 #include <iomanip>
 #include <sstream>
 
-
-
-
 json create_output_sensor_data(const sensor_data& test) {
     std::stringstream time;
     time << std::put_time(std::localtime(&test.time_stamp), "%FT%TGMT+2");
@@ -35,9 +32,12 @@ json create_output_sensor_data(const sensor_data& test) {
 }
 
 json create_camera_feed_output(const sensor_data& test) {
+    std::stringstream time;
+    time << std::put_time(std::localtime(&test.time_stamp), "%FT%TGMT+2");
+    
     json camera_feed_output = {
     {"qc_camera_fails", test.qc_camera_fails},
-    {"time_stamp", test.time_stamp}
+    {"time_stamp", time.str()}
     };
     return camera_feed_output;
 }
