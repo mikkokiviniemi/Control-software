@@ -1,8 +1,8 @@
 #ifndef JSON_OUTPUT_H
 #define JSON_OUTPUT_H
 #include "json.hpp"
+#include "data_structures.hpp"
 
-#include <array>
 
 using json = nlohmann::json;
 

@@ -1,5 +1,7 @@
 #include "json_output.hpp"
 #include "json.hpp"
+#include "data_structures.hpp"
+
 #include <ctime>
 #include <iomanip>
 #include <sstream>
