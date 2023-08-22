@@ -1,84 +1,82 @@
 #include "text_ui.hpp"
+#include <iostream>
 
-
-//Simple ui for speed of conveyor input return uint8_t
-uint8_t speed_of_conveyor_ui (){
-    std::string input;
-    std::cout << "Iput for new speed: ";
-    std::getline(std::cin,input);
-
-    uint8_t new_speed = std::stoi(input);
-    return new_speed;
-}
-//Simple ui for heater and cooler input return uint8_t
-uint8_t heaters_cooler_ui (){
-    std::string input;
-    std::cout << "Iput for new h/c value: ";
-    std::getline(std::cin,input);
-    uint8_t value = std::stoi(input);
-    return value;
-}
-//Simple ui for camera_toggle input return uint8_t
-uint8_t camera_toggle_ui (){
-    std::string input;
-    std::cout << "Iput for camera toggle: ";
-    std::getline(std::cin,input);
-
-    uint8_t camera_toggle = std::stoi(input);
-    return camera_toggle;
-}
 //Display help for commands
 void display_help () {
     std::cout << "Commands:\n";
     std::cout 
-    << "help : display help\n"
     << "soc : speed of conveyor\n"
     << "display : display values\n"
-    << "h/c : heater/cooler toggle\n"
+    << "hc : heater/cooler toggle\n"
     << "camera : camera toggle\n"
     << "quit : Quit UI\n";
 }
-//Print speed_of_conveyor, heater_cooler, camera_toggle
-void display_values (const control_data& data){
-    std::cout 
-    << "Speed_of_conveyor: " << static_cast<int>(data.speed_of_conveyor) << "\n"
-    << "heaters_cooler: " << static_cast<int>(data.heaters_cooler) << "\n"
-    << "camera_toggle: " << static_cast<int>(data.camera_toggle) << "\n";
+//Simple ui for speed of conveyor input return uint8_t
+int soc_ui (){
+    std::string input;
+    std::cout << "Iput for new speed: ";
+    std::getline(std::cin,input);
+
+    int new_speed = std::stoi(input);
+    return new_speed;
 }
+//Simple ui for heater and cooler input return uint8_t
+bool hc_ui (std::string name){
+    std::string input;
+    std::cout << "Iput for new " << name << " value (1,0): ";
+    std::getline(std::cin,input);
+    int value = std::stoi(input);
+    return value;
+}
+//Simple ui for camera_toggle input return uint8_t
+bool camera_ui (){
+    std::string input;
+    std::cout << "Iput for camera toggle: ";
+    std::getline(std::cin,input);
+    int camera_toggle = std::stoi(input);
+    return camera_toggle;
+}
+//Simple text ui 
+void json_ui (json& output,const json& input, const json& input_2) {
+    output["speed_of_conveyor"] = input["speed_of_conveyor"];
+    output["heater_1"] = input["heater_1"];
+    output["heater_2"] = input["heater_2"];
+    output["heater_3"] = input["heater_3"];
+    output["cooler"] = input["cooler"];
+    output["qc_camera_status"] = input["qc_camera_status"];
 
-
-// Main ui loop
-control_data ui_loop (bool& display_ui) {
-    control_data new_data;
-
-    display_help();
-    while(display_ui) {
+    while(true) {
+        std::cout << "[help,soc,hc,camera,display,quit] ";
         std::string choice;
         std::cout << ">";
         std::getline(std::cin,choice);
 
         if (choice == "help") {
             display_help();
-        }
+        }  
         else if (choice == "soc") {
-            new_data.speed_of_conveyor = speed_of_conveyor_ui();
+            output["speed_of_conveyor"] = soc_ui();
         }
-        else if (choice == "h/c") {
-            new_data.heaters_cooler = heaters_cooler_ui();
+        else if (choice == "hc") {
+            output["heater_1"] = hc_ui("heater_1");
+            output["heater_2"] = hc_ui("heater_2");
+            output["heater_3"] = hc_ui("heater_3");
+            output["cooler"] = hc_ui("cooler");
         }
         else if (choice == "camera") {
-            new_data.camera_toggle = camera_toggle_ui();
+            output["qc_camera_status"] = camera_ui();
         }
         else if (choice == "display") {
-            display_values(new_data);
+            std::cout << input.dump(4) << "\n";
+            std::cout << input_2.dump(4) << "\n";
+            std::cout << output.dump(4) << "\n";
         }
         else if (choice == "quit") {
             std::cout << "quit\n";
-            display_ui = false;
+            break;
         }
         else {
             std::cout << "Invalid command!\n";
         }
     }
-
 }

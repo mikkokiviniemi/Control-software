@@ -86,9 +86,31 @@ int main()
         {
             //log_data()    
         }
-
-
-        control_data data = ui_loop(systems_online);
+        json input1 = {
+            {"speed_of_conveyor", 5},
+            {"heater_1", true},
+            {"heater_2", false},
+            {"heater_3", true},
+            {"cooler", false},
+            {"qc_camera_status", true},
+            {"temp_sensor01", 25.5},
+            {"temp_sensor02", 26.0},
+            {"temp_sensor03", 25.8},
+            {"temp_sensor04", 27.3},
+            {"temp_sensor05", 24.9},
+            {"temp_sensor06", 26.5},
+            {"temp_sensor07", 25.7},
+            {"temp_sensor08", 26.2},
+            {"temp_sensor09", 25.1},
+            {"temp_sensor10", 26.7},
+            {"time_stamp", 1630000000}
+        };
+        json input2 = {
+            {"qc_camera_fails", nullptr},
+            {"time_stamp", 1630000000}
+        };
+        json output;
+        json_ui(output,input1,input2);
 
     }
 
