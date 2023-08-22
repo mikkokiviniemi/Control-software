@@ -1,93 +1,33 @@
 #include "data_structures.hpp"
 #include "text_ui.hpp"
 #include "dummy_data.hpp"
+#include "json_output.hpp"
 
-#include <iostream>
-#include <vector>
-#include <chrono>
-#include <bitset>
 #include "external/json.hpp"
 
+#include <iostream>
+#include <chrono>
 
-    
-
-
-//Convert Json to control_data
-control_data json_to_control_data(const nlohmann::json& json_elem) {
-    control_data new_data;
-    new_data.speed_of_conveyor = json_elem["speed_of_conveyor"];
-    bool heater_1 = json_elem["heater_1"];
-    bool heater_2 = json_elem["heater_2"];
-    bool heater_3 = json_elem["heater_3"];
-    bool cooler = json_elem["cooler"];
-    new_data.heaters_cooler = (heater_1 << 0) | (heater_2 << 1) | (heater_3 << 2) | (cooler << 3);
-    new_data.camera_toggle = json_elem["qc_camera_status"];
-    return new_data;
-}
-//Function to display bits
-void display_bits(uint8_t value) {
-    std::bitset<8> bits(value);
-    std::cout << bits << "\n";
-}
-
-/*
-JSON Output:
-{
-    "speed_of_conveyor" : int,
-    "heater_1": bool,
-    "heater_2": bool,
-    "heater_3": bool,
-    "cooler": bool,
-    "qc_camera_status": bool,
-    "temp_sensor01": float,
-    "temp_sensor02": float,
-    "temp_sensor03": float,
-    "temp_sensor04": float,
-    "temp_sensor05": float,
-    "temp_sensor06": float,
-    "temp_sensor07": float,
-    "temp_sensor08": float,
-    "temp_sensor09": float,
-    "temp_sensor10": float,
-    "time_stamp": value
-}
-*/
-/*
-JSON Output_2:
-
-{
-    "qc_camera_fails": ???,
-    "time_stamp": value
-}
-*/
-
-/*
-JSON Commands:
-{
-    "speed_of_conveyor" : int,
-    "heater_1": bool,
-    "heater_2": bool,
-    "heater_3": bool,
-    "cooler": bool,
-    "qc_camera_status": bool,
-}
-*/
 
 int main()
 {
-    bool systems_online{ true };
-    uint8_t speed_of_conveyor = 0x00;
-    uint8_t heaters_cooler = 0x00;
-    uint8_t camera_toggle = 0x00;
+  
+    sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0};
+    control_data ctrl_data{};
 
-    /*bool manual_heaters{ false };
-    bool manual_cooler{ false };
-    bool manual_conveyor{ false };
-    bool qc_camera{ false };
-    */
-    
+    json input1;
+    json input2;
+    json output
+    {
+    {"speed_of_conveyor", 0 },
+    {"heater_1", false },
+    {"heater_2", false },
+    {"heater_3", false },
+    {"cooler", false },
+    {"qc_camera_status", false }
+    };
 
-    while (systems_online)
+    while (true)
     {
         //read_sensor_data()
         
@@ -101,62 +41,24 @@ int main()
         //cooling_control()
         
         //data_transformation()
+        
         //send_data_to_ui()
         //if (logging_enabled())
         {
             //log_data()    
         }
-       json_to_control
 
-        // Test JSON data
-        std::string json_string = R"(
-            {
-                "speed_of_conveyor": 5,
-                "heater_1": true,
-                "heater_2": true,
-                "heater_3": true,
-                "cooler": false,
-                "qc_camera_status": true
-            }
-        )";
+        sensor_input = dummy_data_generator(sensor_input, ctrl_data);
+        std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
+        
+        sensor_input.time_stamp = { std::chrono::system_clock::to_time_t(now) };
 
-        nlohmann::json json_data = nlohmann::json::parse(json_string);
-        control_data data = json_to_control_data(json_data);
+        input1 = create_output_sensor_data(sensor_input, ctrl_data);
+        input2 = create_camera_feed_output(sensor_input);
 
-        std::cout << "Speed of Conveyor: ";
-        std::cout << int(data.speed_of_conveyor) << "\n";
-        std::cout << "Heaters and Cooler: ";
-        display_bits(data.heaters_cooler);
-        std::cout << "Camera Toggle: ";
-        display_bits(data.camera_toggle);
+        json_ui(output, input1, input2);
 
-
-        data = ui_loop(systems_online);
-        json input1 = {
-            {"speed_of_conveyor", 5},
-            {"heater_1", true},
-            {"heater_2", false},
-            {"heater_3", true},
-            {"cooler", false},
-            {"qc_camera_status", true},
-            {"temp_sensor01", 25.5},
-            {"temp_sensor02", 26.0},
-            {"temp_sensor03", 25.8},
-            {"temp_sensor04", 27.3},
-            {"temp_sensor05", 24.9},
-            {"temp_sensor06", 26.5},
-            {"temp_sensor07", 25.7},
-            {"temp_sensor08", 26.2},
-            {"temp_sensor09", 25.1},
-            {"temp_sensor10", 26.7},
-            {"time_stamp", 1630000000}
-        };
-        json input2 = {
-            {"qc_camera_fails", nullptr},
-            {"time_stamp", 1630000000}
-        };
-        json output;
-        json_ui(output,input1,input2);
+        ctrl_data = json_to_control_data(output);
 
     }
 

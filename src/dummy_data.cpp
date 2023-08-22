@@ -2,7 +2,7 @@
 
 constexpr float CONVEYOR_HEAT_CONSTANT{ 3.6 };
 constexpr float CONVEYOR_MAX_EFFICIENCY{ 0.44 };
-constexpr int16_t HEATER_ON{ 10 };
+constexpr int16_t HEATER_ON { 10 };
 constexpr int16_t HEATER_OFF{ -5 };
 constexpr int16_t COOLER_ON{ -10 };
 constexpr uint16_t QC_CAMERA_FAILS{ 0b1010110101010101 };
