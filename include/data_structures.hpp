@@ -2,6 +2,7 @@
 #define DATA_STRUCTURES_HPP
 
 #include <cstdint>
+#include <ctime>
 
 constexpr uint8_t HEATER_1  { 0b1 };
 constexpr uint8_t HEATER_2  { 0b10 };
