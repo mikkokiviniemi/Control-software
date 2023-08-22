@@ -10,6 +10,6 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 add_executable(main main.cpp)
 
 add_subdirectory(src)
-target_link_libraries(main text_ui)
+target_link_libraries(main text_ui dummy_data)
 
 # add_subdirectory(tests)

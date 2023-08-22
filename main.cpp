@@ -1,42 +1,14 @@
+#include "data_structures.hpp"
 #include "text_ui.hpp"
+#include "dummy_data.hpp"
 
 #include <iostream>
 #include <vector>
 #include <chrono>
 
-struct sensor_data {
-    uint8_t speed_of_conveyor;
-    uint16_t qc_camera_fails;
 
-    int16_t temp_sensor01;
-    int16_t temp_sensor02;
-    int16_t temp_sensor03;
-    int16_t temp_sensor04;
-    int16_t temp_sensor05;
-    int16_t temp_sensor06;
-    int16_t temp_sensor07;
-    int16_t temp_sensor08;
-    int16_t temp_sensor09;
-    int16_t temp_sensor10;
+    
 
-    std::time_t time_stamp;
-};
-/*
-struct control_data {
-    uint8_t speed_of_conveyor;
-    uint8_t heaters_cooler;
-    uint8_t camera_toggle;
-};*/
-
-//Simple data_generator
-std::vector<sensor_data> dummy_data_generator(int amount) {
-    std::vector<sensor_data> dummy_data;
-    for (int i = 0; i < amount; i++) {
-        sensor_data data_block = {1,1,1,1,1,1,1,1,1,1,1,1,std::time(nullptr)};
-        dummy_data.push_back(data_block);
-    }
-    return dummy_data;
-}
 
 /*
 JSON Output:

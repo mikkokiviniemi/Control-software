@@ -1,6 +1,5 @@
 #include "text_ui.hpp"
 
-#include <iostream>
 
 //Simple ui for speed of conveyor input return uint8_t
 uint8_t speed_of_conveyor_ui (){
