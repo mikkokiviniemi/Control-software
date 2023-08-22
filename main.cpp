@@ -1,6 +1,7 @@
 #include "text_ui.hpp"
 
 #include <iostream>
+#include <vector>
 #include <chrono>
 
 struct sensor_data {
@@ -20,12 +21,22 @@ struct sensor_data {
 
     std::time_t time_stamp;
 };
-
+/*
 struct control_data {
     uint8_t speed_of_conveyor;
     uint8_t heaters_cooler;
     uint8_t camera_toggle;
-};
+};*/
+
+//Simple data_generator
+std::vector<sensor_data> dummy_data_generator(int amount) {
+    std::vector<sensor_data> dummy_data;
+    for (int i = 0; i < amount; i++) {
+        sensor_data data_block = {1,1,1,1,1,1,1,1,1,1,1,1,std::time(nullptr)};
+        dummy_data.push_back(data_block);
+    }
+    return dummy_data;
+}
 
 /*
 JSON Output:
@@ -105,7 +116,7 @@ int main()
         }
 
 
-        ui_loop(systems_online, speed_of_conveyor, heaters_cooler, camera_toggle);
+        control_data data = ui_loop(systems_online);
 
     }
 

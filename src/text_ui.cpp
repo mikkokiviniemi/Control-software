@@ -40,16 +40,18 @@ void display_help () {
     << "quit : Quit UI\n";
 }
 //Print speed_of_conveyor, heater_cooler, camera_toggle
-void display_values (uint8_t& speed_of_conveyor, uint8_t& heaters_cooler, uint8_t& camera_toggle) {
+void display_values (const control_data& data){
     std::cout 
-    << "Speed_of_conveyor: " << static_cast<int>(speed_of_conveyor) << "\n"
-    << "heaters_cooler: " << static_cast<int>(heaters_cooler) << "\n"
-    << "camera_toggle: " << static_cast<int>(camera_toggle) << "\n";
+    << "Speed_of_conveyor: " << static_cast<int>(data.speed_of_conveyor) << "\n"
+    << "heaters_cooler: " << static_cast<int>(data.heaters_cooler) << "\n"
+    << "camera_toggle: " << static_cast<int>(data.camera_toggle) << "\n";
 }
 
 
 // Main ui loop
-void ui_loop (bool& display_ui, uint8_t& speed_of_conveyor, uint8_t& heaters_cooler, uint8_t& camera_toggle) {
+control_data ui_loop (bool& display_ui) {
+    control_data new_data;
+
     display_help();
     while(display_ui) {
         std::string choice;
@@ -60,16 +62,16 @@ void ui_loop (bool& display_ui, uint8_t& speed_of_conveyor, uint8_t& heaters_coo
             display_help();
         }
         else if (choice == "soc") {
-            speed_of_conveyor = speed_of_conveyor_ui();
+            new_data.speed_of_conveyor = speed_of_conveyor_ui();
         }
         else if (choice == "h/c") {
-            heaters_cooler = heaters_cooler_ui();
+            new_data.heaters_cooler = heaters_cooler_ui();
         }
         else if (choice == "camera") {
-            camera_toggle = camera_toggle_ui();
+            new_data.camera_toggle = camera_toggle_ui();
         }
         else if (choice == "display") {
-            display_values(speed_of_conveyor,heaters_cooler,camera_toggle);
+            display_values(new_data);
         }
         else if (choice == "quit") {
             std::cout << "quit\n";
