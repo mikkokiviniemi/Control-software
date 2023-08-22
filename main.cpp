@@ -1,31 +1,9 @@
 #include "text_ui.hpp"
+#include "json_output.hpp"
 
 #include <iostream>
 #include <chrono>
 
-struct sensor_data {
-    uint8_t speed_of_conveyor;
-    uint16_t qc_camera_fails;
-
-    int16_t temp_sensor01;
-    int16_t temp_sensor02;
-    int16_t temp_sensor03;
-    int16_t temp_sensor04;
-    int16_t temp_sensor05;
-    int16_t temp_sensor06;
-    int16_t temp_sensor07;
-    int16_t temp_sensor08;
-    int16_t temp_sensor09;
-    int16_t temp_sensor10;
-
-    std::time_t time_stamp;
-};
-
-struct control_data {
-    uint8_t speed_of_conveyor;
-    uint8_t heaters_cooler;
-    uint8_t camera_toggle;
-};
 
 int main()
 {
@@ -40,7 +18,7 @@ int main()
     bool qc_camera{ false };
     */
     
-
+    /*
     while (systems_online)
     {
         //read_sensor_data()
@@ -65,6 +43,8 @@ int main()
         ui_loop(systems_online, speed_of_conveyor, heaters_cooler, camera_toggle);
 
     }
+    */
+
 
     return 0;
 }

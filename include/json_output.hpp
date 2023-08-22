@@ -1,65 +1,36 @@
 #ifndef JSON_OUTPUT_H
 #define JSON_OUTPUT_H
-#include "external/json.hpp"
-#include "external/json_fwd.hpp"
+#include "json.hpp"
+// #include "json_fwd.hpp"
 #include <array>
 
 using json = nlohmann::json;
 
-std::array<float, 16> temp_sensors; // tämä arrayksi voi olla mahdollinen
+// test purposes
+struct sensor_data {
+    uint8_t speed_of_conveyor;
+    uint16_t qc_camera_fails;
 
-json output_data = {
-    {"speed_of_conveyor", 0}, // uint16_t 
-    {"heater_1", false},
-    {"heater_2", false},
-    {"heater_3", false},
-    {"cooler", false},
-    {"qc_camera_status", false},
-    {"temp_sensors", {0.0f, 0.0f, 0.0f}}, // tai sitten näin mutta 10 kpl
-    //...
+    int16_t temp_sensor01;
+    int16_t temp_sensor02;
+    int16_t temp_sensor03;
+    int16_t temp_sensor04;
+    int16_t temp_sensor05;
+    int16_t temp_sensor06;
+    int16_t temp_sensor07;
+    int16_t temp_sensor08;
+    int16_t temp_sensor09;
+    int16_t temp_sensor10;
+
+    std::time_t time_stamp;
 };
 
-/*
-JSON Output:
-{
-    "speed_of_conveyor" : int,
-    "heater_1": bool,
-    "heater_2": bool,
-    "heater_3": bool,
-    "cooler": bool,
-    "qc_camera_status": bool,
-    "temp_sensor01": float,
-    "temp_sensor02": float,
-    "temp_sensor03": float,
-    "temp_sensor04": float,
-    "temp_sensor05": float,
-    "temp_sensor06": float,
-    "temp_sensor07": float,
-    "temp_sensor08": float,
-    "temp_sensor09": float,
-    "temp_sensor10": float,
-    "time_stamp": value
-}
 
-/*
-JSON Output_2:
+json create_output_sensor_data(const sensor_data& test);
+json create_camera_feed_output(const sensor_data& test);
 
-{
-    "qc_camera_fails": ???,
-    "time_stamp": value
-}
-*/
-
-/*
-JSON Commands:
-{
-    "speed_of_conveyor" : int,
-    "heater_1": bool,
-    "heater_2": bool,
-    "heater_3": bool,
-    "cooler": bool,
-    "qc_camera_status": bool,
-}
-*/
-
+// time functions for time_stamp
+// std::put_time(std::localtime(/*std::time_t*/), "%FT%TGMT+2")
+// std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
+// std::time_t time_var{ std::chrono::system_clock::to_time_t(now) };
 #endif
