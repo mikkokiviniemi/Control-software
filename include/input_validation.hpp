@@ -4,8 +4,26 @@
 #include "data_structures.hpp"
 #include <iostream>
 
+//for input validation
+constexpr uint16_t FAILED_TEMP_SENSOR01 { 0b1 };
+constexpr uint16_t FAILED_TEMP_SENSOR02 { 0b10 };
+constexpr uint16_t FAILED_TEMP_SENSOR03 { 0b100 };
+constexpr uint16_t FAILED_TEMP_SENSOR04 { 0b1000 };
+constexpr uint16_t FAILED_TEMP_SENSOR05 { 0b10000 };
+constexpr uint16_t FAILED_TEMP_SENSOR06 { 0b100000 };
+constexpr uint16_t FAILED_TEMP_SENSOR07 { 0b1000000 };
+constexpr uint16_t FAILED_TEMP_SENSOR08 { 0b10000000 };
+constexpr uint16_t FAILED_TEMP_SENSOR09 { 0b100000000 };
+constexpr uint16_t FAILED_TEMP_SENSOR10 { 0b1000000000 };
+
+constexpr uint8_t FAILED_HEATERS{ 0b1 };
+constexpr uint8_t FAILED_COOLER{ 0b1 };
+constexpr uint8_t FAILED_CAMERA_TOGGLE{ 0b1 };
+
+constexpr uint8_t HEATER_MAX_VALUE{ 0b00000111 };
+
 //function for data input validation
-uint16_t temperature_input_validation(const sensor_data& sensor_input) {
+inline uint16_t temperature_input_validation(const sensor_data& sensor_input) {
     uint16_t failed_mask{ 0 };
     if (sensor_input.temp_sensor01 > 1100 || sensor_input.temp_sensor01 < -400)
     {
@@ -62,7 +80,7 @@ uint16_t temperature_input_validation(const sensor_data& sensor_input) {
 
 
 //function for ctrl data input validation
-uint8_t control_input_validation(const control_data& ctrl_data)
+inline uint8_t control_input_validation(const control_data& ctrl_data)
 {
     uint8_t failed_mask{ 0 };
 

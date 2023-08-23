@@ -12,4 +12,4 @@ add_executable(main main.cpp)
 add_subdirectory(src)
 target_link_libraries(main text_ui json_output dummy_data)
 
-# add_subdirectory(tests)
+add_subdirectory(tests)

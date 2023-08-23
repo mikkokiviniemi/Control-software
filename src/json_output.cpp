@@ -22,16 +22,16 @@ json create_output_sensor_data(const sensor_data& sensor_input, const control_da
     {"cooler", (ctrl_data.cooler == 1)},
     {"qc_camera_status", check_bitmask(ctrl_data.camera_toggle, 1)},
     {"temp_sensors", {
-        static_cast<float>(sensor_input.temp_sensor01 / 10), 
-        static_cast<float>(sensor_input.temp_sensor02 / 10),
-        static_cast<float>(sensor_input.temp_sensor03 / 10),
-        static_cast<float>(sensor_input.temp_sensor04 / 10),
-        static_cast<float>(sensor_input.temp_sensor05 / 10),
-        static_cast<float>(sensor_input.temp_sensor06 / 10),
-        static_cast<float>(sensor_input.temp_sensor07 / 10),
-        static_cast<float>(sensor_input.temp_sensor08 / 10),
-        static_cast<float>(sensor_input.temp_sensor09 / 10),
-        static_cast<float>(sensor_input.temp_sensor10 / 10)
+        static_cast<float>(sensor_input.temp_sensor01) / 10.0f, 
+        static_cast<float>(sensor_input.temp_sensor02) / 10.0f,
+        static_cast<float>(sensor_input.temp_sensor03) / 10.0f,
+        static_cast<float>(sensor_input.temp_sensor04) / 10.0f,
+        static_cast<float>(sensor_input.temp_sensor05) / 10.0f,
+        static_cast<float>(sensor_input.temp_sensor06) / 10.0f,
+        static_cast<float>(sensor_input.temp_sensor07) / 10.0f,
+        static_cast<float>(sensor_input.temp_sensor08) / 10.0f,
+        static_cast<float>(sensor_input.temp_sensor09) / 10.0f,
+        static_cast<float>(sensor_input.temp_sensor10) / 10.0f
         }},
     {"time_stamp", time.str()}
     };

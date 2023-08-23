@@ -8,23 +8,25 @@ constexpr uint8_t HEATER_1  { 0b1 };
 constexpr uint8_t HEATER_2  { 0b10 };
 constexpr uint8_t HEATER_3  { 0b100 };
 
-//for input validation
-constexpr uint16_t FAILED_TEMP_SENSOR01 { 0b1 };
-constexpr uint16_t FAILED_TEMP_SENSOR02 { 0b10 };
-constexpr uint16_t FAILED_TEMP_SENSOR03 { 0b100 };
-constexpr uint16_t FAILED_TEMP_SENSOR04 { 0b1000 };
-constexpr uint16_t FAILED_TEMP_SENSOR05 { 0b10000 };
-constexpr uint16_t FAILED_TEMP_SENSOR06 { 0b100000 };
-constexpr uint16_t FAILED_TEMP_SENSOR07 { 0b1000000 };
-constexpr uint16_t FAILED_TEMP_SENSOR08 { 0b10000000 };
-constexpr uint16_t FAILED_TEMP_SENSOR09 { 0b100000000 };
-constexpr uint16_t FAILED_TEMP_SENSOR10 { 0b1000000000 };
 
-constexpr uint8_t FAILED_HEATERS{ 0b1 };
-constexpr uint8_t FAILED_COOLER{ 0b1 };
-constexpr uint8_t FAILED_CAMERA_TOGGLE{ 0b1 };
-
-constexpr uint8_t HEATER_MAX_VALUE{ 0b00000111 };
+/***************SHARED MEMORY SCHEMA***************************
+*  SHM_ptr       = temperature 1         (2 bytes)   (input)  *
+*  SHM_ptr + 2   = temperature 2         (2 bytes)   (input)  *
+*  SHM_ptr + 4   = temperature 3         (2 bytes)   (input)  *
+*  SHM_ptr + 6   = temperature 4         (2 bytes)   (input)  *
+*  SHM_ptr + 8   = temperature 5         (2 bytes)   (input)  *
+*  SHM_ptr + 10  = temperature 6         (2 bytes)   (input)  *
+*  SHM_ptr + 12  = temperature 7         (2 bytes)   (input)  *
+*  SHM_ptr + 14  = temperature 8         (2 bytes)   (input)  *
+*  SHM_ptr + 16  = temperature 9         (2 bytes)   (input)  *
+*  SHM_ptr + 18  = temperature 10        (2 bytes)   (input)  *
+*  SHM_ptr + 20  = conveyor speed sensor (1 byte)    (input)  *
+*  SHM_ptr + 21  = conveyor speed target (1 byte)    (output) *
+*  SHM_ptr + 22  = heaters control       (1 byte)    (output) *
+*  SHM_ptr + 23  = cooler control        (1 byte)    (output) *
+*  SHM_ptr + 24  = camera control        (1 byte)    (output) *
+*  SHM_ptr + 25  = camera data           (2 bytes)   (input)  *
+**************************************************************/
 
 
 //Control data structure

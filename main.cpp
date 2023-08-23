@@ -52,7 +52,7 @@ int main()
             //log_data()    
         }
 
-        sensor_input = dummy_data_generator(sensor_input, ctrl_data);
+        dummy_data_generator(sensor_input, ctrl_data);
         std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
 
         failed_sensor_input_validation = temperature_input_validation(sensor_input);
