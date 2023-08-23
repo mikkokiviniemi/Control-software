@@ -2,6 +2,7 @@
 #include "text_ui.hpp"
 #include "dummy_data.hpp"
 #include "json_output.hpp"
+#include "automatic_controls.hpp"
 
 #include "external/json.hpp"
 
@@ -47,7 +48,6 @@ int main()
         {
             //log_data()    
         }
-
         sensor_input = dummy_data_generator(sensor_input, ctrl_data);
         std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
         
@@ -58,7 +58,9 @@ int main()
 
         json_ui(output, input1, input2);
 
-        ctrl_data = json_to_control_data(output);
+        ctrl_data = json_to_control_data(output);      
+        automatic_loop(sensor_input,ctrl_data);
+
 
     }
 
