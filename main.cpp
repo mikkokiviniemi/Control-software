@@ -1,76 +1,35 @@
-#include "data_structures.hpp"
-#include "text_ui.hpp"
-#include "dummy_data.hpp"
-#include "json_output.hpp"
-#include "input_validation.hpp"
-#include "automatic_controls.hpp"
 
+#include "shared_memory_wrapper.hpp"
 
-#include "external/json.hpp"
-
-#include <iostream>
 #include <chrono>
+#include <iostream>
 #include <thread>
-#include <mutex>
 
-std::mutex mtx; 
-
+using namespace std::chrono_literals;
 
 int main()
 {
+    std::string filename{ "shm_test" };
+    simulation_shm_wrapper shm_wrapper{filename};
 
-    uint16_t failed_sensor_input_validation{ 0 };
-    uint8_t failed_control_input_validation{ 0 };
-
-    sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0};
-    control_data ctrl_data{};
-
-    json input1;
-    json input2;
-    json output
+    for (int16_t index{ 0 }; index < 10; ++index)
     {
-    {"speed_of_conveyor", 0 },
-    {"heater_1", false },
-    {"heater_2", false },
-    {"heater_3", false },
-    {"cooler", false },
-    {"qc_camera_status", false }
-    };
-    sensor_input = dummy_data_generator(sensor_input, ctrl_data);
-    bool is_running = true;
-    std::thread ui_thread([&]() {
-        while (is_running) {
-            json_ui(output, input1, input2);
-            ctrl_data = json_to_control_data(output);
-        }
-    });
+        *(reinterpret_cast<int16_t*>(shm_wrapper.ptr_to_memory + index * 2)) = index;
+    }
+    *(reinterpret_cast<uint8_t*>(shm_wrapper.ptr_to_memory + 20)) = 150;
+    *(reinterpret_cast<uint16_t*>(shm_wrapper.ptr_to_memory + 25)) = 0b0101010101010101;
 
+    int camera_status{ 0 };
 
-    std::thread automation_thread([&]() {
-        while (is_running) {
-            std::lock_guard<std::mutex> lock(mtx);
-            automatic_loop(sensor_input,ctrl_data);
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
-        }
-    });
-    std::thread data_thread([&]() {
-        while (is_running) {
-            {
-                sensor_input = dummy_data_generator(sensor_input, ctrl_data);
-                std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
-                sensor_input.time_stamp = { std::chrono::system_clock::to_time_t(now) };
-            }
-            {
-                input1 = create_output_sensor_data(sensor_input, ctrl_data);
-                input2 = create_camera_feed_output(sensor_input);
-            }
-            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-        }
-    });
+    while (camera_status != 1)
+    {
+        std::cout << "Waiting...\n";
+        std::this_thread::sleep_for(2000ms);
+        uint8_t input{ *(reinterpret_cast<uint8_t*>(shm_wrapper.ptr_to_memory + 24)) };
+        camera_status = static_cast<int>(input);
+    }
 
-    automation_thread.join();
-    data_thread.join();
-    ui_thread.join();
+    std::cout << "Quit first app!\n";
 
 
     return 0;

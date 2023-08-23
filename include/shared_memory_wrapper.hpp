@@ -70,7 +70,7 @@ class simulation_shm_wrapper
 {
 public:
     simulation_shm_wrapper(const std::string& new_filename, std::size_t new_block_size = 4096)
-        : filename{ new_filename }, block_size{ new_block_size }, ptr_to_memory{attach_memory_block(filename, block_size)}
+        : filename{ new_filename }, block_size{ new_block_size }, ptr_to_memory{attach_memory_block(new_filename, new_block_size)}
     {}
     
     int16_t read_temperature_sensor(uint8_t index)
@@ -121,10 +121,10 @@ public:
     }
 
 
+    void* ptr_to_memory;
 private:
     std::string filename;
     std::size_t block_size;
-    void* ptr_to_memory;
 
 };
 
