@@ -1,7 +1,8 @@
-#ifndef SHARED_MEMORY_WRAPPER_CPP
-#define SHARED_MEMORY_WRAPPER_CPP
+#ifndef SHARED_MEMORY_WRAPPER_HPP
+#define SHARED_MEMORY_WRAPPER_HPP
 
 #include <cstdint>
+#include <iostream>
 #include <string>
 
 #include <sys/ipc.h>
@@ -9,13 +10,6 @@
 #include <sys/types.h>
 
 constexpr int16_t SHM_ERROR{ -1 };
-
-enum class Destroy_status
-{
-    true,
-    false,
-    invalid_block_id
-};
 
 static int get_shared_block(const std::string& filename, std::size_t size)
 {
@@ -33,7 +27,7 @@ static int get_shared_block(const std::string& filename, std::size_t size)
     return shmget(key, size, 0666 | IPC_CREAT);
 }
 
-uint8_t* attach_memory_block(const std::string& filename, std::size_t size)
+void* attach_memory_block(const std::string& filename, std::size_t size)
 {
     //Get the block-id for the specific file
     int shared_block_id{ get_shared_block(filename, size) };
@@ -44,8 +38,8 @@ uint8_t* attach_memory_block(const std::string& filename, std::size_t size)
     }
 
     //map the shared block into this process's memory and give a pointer to it
-    uint8_t* result = shmat(shared_block_id, nullptr, 0);
-    if (result == reinterpret_cast<char*>(SHM_ERROR))
+    void* result = shmat(shared_block_id, nullptr, 0);
+    if (result == reinterpret_cast<uint8_t*>(SHM_ERROR))
     {
         return nullptr;
     }
@@ -54,12 +48,12 @@ uint8_t* attach_memory_block(const std::string& filename, std::size_t size)
 }
 
 //Detach the memory block from process, and return boolean if succesful or not
-bool detach_memory_block(uint8_t* block)
+bool detach_memory_block(void* block)
 {
     return (shmdt(block) != SHM_ERROR);
 }
 
-bool destroy_memory_block(uint8_t* filename)
+bool destroy_memory_block(const std::string& filename)
 {
     int shared_block_id{ get_shared_block(filename, 0) };
 
@@ -81,32 +75,39 @@ public:
     
     int16_t read_temperature_sensor(uint8_t index)
     {
-        return (static_cast<int16_t>(*(ptr_to_memory + index * 2)) << 8) | *(ptr_to_memory + index * 2 + 1);
+        return *(reinterpret_cast<int16_t*>(ptr_to_memory + index * 2));
+        // return (static_cast<int16_t>(*(ptr_to_memory + index * 2)) << 8) | *(ptr_to_memory + index * 2 + 1);
     }
     uint8_t read_conveyor_speed_sensor()
     {
-        return *(ptr_to_memory + 20);
+        return *(reinterpret_cast<uint8_t*>(ptr_to_memory + 20));
+        // return *(ptr_to_memory + 20);
     }
-    uint16_t read_qc_camera_feed();
+    uint16_t read_qc_camera_feed()
     {
-        return (static_cast<int16_t>(*(ptr_to_memory + 25)) << 8) | *(ptr_to_memory + 26);
+        return *(reinterpret_cast<uint16_t*>(ptr_to_memory + 25));
+        // return (static_cast<int16_t>(*(ptr_to_memory + 25)) << 8) | *(ptr_to_memory + 26);
     }
     void set_conveyor_target_speed(uint8_t target_speed)
     {
-        *(ptr_to_memory + 21) = target_speed;
+        *(reinterpret_cast<uint8_t*>(ptr_to_memory + 21)) = target_speed;
+        // *(ptr_to_memory + 21) = target_speed;
     }
     
     void set_heaters(uint8_t heaters)
     {
-        *(ptr_to_memory + 22) = heaters;
+        *(reinterpret_cast<uint8_t*>(ptr_to_memory + 22)) = heaters;
+        // *(ptr_to_memory + 22) = heaters;
     }
     void set_cooler(uint8_t cooler)
     {
-        *(ptr_to_memory + 23) = cooler;
+        *(reinterpret_cast<uint8_t*>(ptr_to_memory + 23)) = cooler;
+        // *(ptr_to_memory + 23) = cooler;
     }
     void set_camera_status(uint8_t camera_status)
     {
-        *(ptr_to_memory + 24) = camera_status;
+        *(reinterpret_cast<uint8_t*>(ptr_to_memory + 24)) = camera_status;
+        // *(ptr_to_memory + 24) = camera_status;
     }
     
     ~simulation_shm_wrapper()
@@ -123,7 +124,7 @@ public:
 private:
     std::string filename;
     std::size_t block_size;
-    char* ptr_to_memory;
+    void* ptr_to_memory;
 
 };
 
