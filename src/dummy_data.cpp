@@ -46,7 +46,7 @@ void simulate_conveyor(sensor_data& dummy_data, const control_data& ctrl_data)
 
 //Simple data_generator
 sensor_data dummy_data_generator(sensor_data& dummy_data, const control_data& ctrl_data) {
-    if (ctrl_data.heaters_cooler & HEATER_1)
+    if (ctrl_data.heaters & HEATER_1)
     {
         modify_temperature(dummy_data, HEATER_ON);
     }
@@ -54,7 +54,7 @@ sensor_data dummy_data_generator(sensor_data& dummy_data, const control_data& ct
     {
         modify_temperature(dummy_data, HEATER_OFF);
     }
-    if (ctrl_data.heaters_cooler & HEATER_2)
+    if (ctrl_data.heaters & HEATER_2)
     {
         modify_temperature(dummy_data, HEATER_ON);
     }
@@ -62,7 +62,7 @@ sensor_data dummy_data_generator(sensor_data& dummy_data, const control_data& ct
     {
         modify_temperature(dummy_data, HEATER_OFF);
     }
-    if (ctrl_data.heaters_cooler & HEATER_3)
+    if (ctrl_data.heaters & HEATER_3)
     {
         modify_temperature(dummy_data, HEATER_ON);
     }
@@ -70,7 +70,7 @@ sensor_data dummy_data_generator(sensor_data& dummy_data, const control_data& ct
     {
         modify_temperature(dummy_data, HEATER_OFF);
     }
-    if (ctrl_data.heaters_cooler & COOLER)
+    if (ctrl_data.cooler == 1)
     {
         modify_temperature(dummy_data, COOLER_ON);
     }

@@ -7,12 +7,12 @@
 constexpr uint8_t HEATER_1  { 0b1 };
 constexpr uint8_t HEATER_2  { 0b10 };
 constexpr uint8_t HEATER_3  { 0b100 };
-constexpr uint8_t COOLER    { 0b1000 };
 
 //Control data structure
 struct control_data {
     uint8_t speed_of_conveyor;
-    uint8_t heaters_cooler;
+    uint8_t heaters;
+    uint8_t cooler;
     uint8_t camera_toggle;
 };
 
