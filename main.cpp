@@ -3,11 +3,17 @@
 #include "dummy_data.hpp"
 #include "json_output.hpp"
 #include "input_validation.hpp"
+#include "automatic_controls.hpp"
+
 
 #include "external/json.hpp"
 
 #include <iostream>
 #include <chrono>
+#include <thread>
+#include <mutex>
+
+std::mutex mtx; 
 
 
 int main()
@@ -30,48 +36,42 @@ int main()
     {"cooler", false },
     {"qc_camera_status", false }
     };
-
-    while (true)
-    {
-        //read_sensor_data()
-        
-    //if UI decides to manual override, it will circumvent automatic control
-        //read_ui_control()
-
-
-    // The control functions writes the control data directly to shared memory
-        //conveyor_control()
-        //heating_control()
-        //cooling_control()
-        
-        //data_transformation()
-        
-        //send_data_to_ui()
-        //if (logging_enabled())
-        {
-            //log_data()    
+    sensor_input = dummy_data_generator(sensor_input, ctrl_data);
+    bool is_running = true;
+    std::thread ui_thread([&]() {
+        while (is_running) {
+            json_ui(output, input1, input2);
+            ctrl_data = json_to_control_data(output);
         }
+    });
 
-        dummy_data_generator(sensor_input, ctrl_data);
-        std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
 
-        failed_sensor_input_validation = temperature_input_validation(sensor_input);
+    std::thread automation_thread([&]() {
+        while (is_running) {
+            std::lock_guard<std::mutex> lock(mtx);
+            automatic_loop(sensor_input,ctrl_data);
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        }
+    });
+    std::thread data_thread([&]() {
+        while (is_running) {
+            {
+                sensor_input = dummy_data_generator(sensor_input, ctrl_data);
+                std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
+                sensor_input.time_stamp = { std::chrono::system_clock::to_time_t(now) };
+            }
+            {
+                input1 = create_output_sensor_data(sensor_input, ctrl_data);
+                input2 = create_camera_feed_output(sensor_input);
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        }
+    });
 
-        sensor_input.time_stamp = { std::chrono::system_clock::to_time_t(now) };
+    automation_thread.join();
+    data_thread.join();
+    ui_thread.join();
 
-        input1 = create_output_sensor_data(sensor_input, ctrl_data);
-        input2 = create_camera_feed_output(sensor_input);
-
-        json_ui(output, input1, input2);
-
-        ctrl_data = json_to_control_data(output);
-
-        failed_control_input_validation = control_input_validation(ctrl_data);
-
-        std::cout << "Sensor_data input validation: " << failed_sensor_input_validation << '\n';
-        std::cout << "Control_data input validation: " << static_cast<int16_t>(failed_control_input_validation) << '\n';
-
-    }
 
     return 0;
 }
