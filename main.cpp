@@ -2,7 +2,9 @@
 #include "text_ui.hpp"
 #include "dummy_data.hpp"
 #include "json_output.hpp"
+#include "input_validation.hpp"
 #include "automatic_controls.hpp"
+
 
 #include "external/json.hpp"
 
@@ -16,7 +18,10 @@ std::mutex mtx;
 
 int main()
 {
-  
+
+    uint16_t failed_sensor_input_validation{ 0 };
+    uint8_t failed_control_input_validation{ 0 };
+
     sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0};
     control_data ctrl_data{};
 
@@ -39,6 +44,7 @@ int main()
             ctrl_data = json_to_control_data(output);
         }
     });
+
 
     std::thread automation_thread([&]() {
         while (is_running) {
@@ -65,6 +71,7 @@ int main()
     automation_thread.join();
     data_thread.join();
     ui_thread.join();
+
 
     return 0;
 }

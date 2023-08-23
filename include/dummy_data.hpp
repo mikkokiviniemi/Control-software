@@ -3,6 +3,6 @@
 
 #include "data_structures.hpp"
 
-sensor_data dummy_data_generator(sensor_data& dummy_data, const control_data& ctrl_data);
+void dummy_data_generator(sensor_data& dummy_data, const control_data& ctrl_data);
 
 #endif
