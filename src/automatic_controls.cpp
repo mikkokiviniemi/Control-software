@@ -29,13 +29,11 @@ uint8_t conveyor_control(const sensor_data &data)
 //Automatic control block for heating control. Takes values from sensor_data and makes changes to heating.
 uint8_t heating_control(const sensor_data &data, uint8_t heater)
 {
-    uint8_t heaters = 0b0000;
     if (mean_temp(data) > MAX_TEMP) {
-        heaters &= ~heater;
+        return 0;
     }else {
-        heaters |= heater;
+        return heater;
     }
-    return heaters;
 }
 //Automatic control block for cooling control. Takes values from sensor_data and makes changes to cooling.
 uint8_t cooling_control(const sensor_data &data)
@@ -49,16 +47,21 @@ uint8_t cooling_control(const sensor_data &data)
     return cooling;
 }
 //Loop block for automation
-void automatic_loop(const sensor_data &sens_data, control_data& ctrl_data)
+void automatic_loop(const sensor_data &sens_data, control_data& ctrl_data, const json& control_json)
 {
-    //if (!crtl_data.manual_convoyer) :
-    ctrl_data.speed_of_conveyor = conveyor_control(sens_data);
-    //if (!crtl_data.manual_heating_1):
-    ctrl_data.heaters = heating_control(sens_data,HEATER_1);
-    //if (!crtl_data.manual_heating_2):
-    ctrl_data.heaters = heating_control(sens_data,HEATER_2);
-    //if (!crtl_data.manual_heating_3):
-    ctrl_data.heaters = heating_control(sens_data,HEATER_3);
-    //if (!crtl_data.manual_cooling): 
-    ctrl_data.cooler = cooling_control(sens_data);
+    if (!control_json["conveyor_manual_control"]) {
+        ctrl_data.speed_of_conveyor = conveyor_control(sens_data);
+    }
+    if (!control_json["heater1_manual_control"]) {
+        ctrl_data.heaters |= heating_control(sens_data,HEATER_1);
+    }
+    if (!control_json["heater2_manual_control"]) {
+        ctrl_data.heaters |= heating_control(sens_data,HEATER_2);
+    }
+    if (!control_json["heater3_manual_control"]) {
+        ctrl_data.heaters |= heating_control(sens_data,HEATER_3);
+    }
+    if (!control_json["cooler_manual_control"]) {
+        ctrl_data.cooler = cooling_control(sens_data);
+    }
 }

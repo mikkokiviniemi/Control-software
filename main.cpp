@@ -34,16 +34,20 @@ int main()
     {"heater_2", false },
     {"heater_3", false },
     {"cooler", false },
-    {"qc_camera_status", false }
+    {"qc_camera_status", false },
+    {"conveyor_manual_control", false},
+    {"heater1_manual_control", false},
+    {"heater2_manual_control" , false},
+    {"heater3_manual_control", false},
+    {"cooler_manual_control", false}
+
     };
     dummy_data_generator(sensor_input, ctrl_data);
     bool is_running = true;
-    bool ui_changes = false;
 
     std::thread ui_thread([&]() {
         while (is_running) {
             json_ui(output, input1, input2);
-            ui_changes = true;
             std::lock_guard<std::mutex> lock(mtx);
             ctrl_data = json_to_control_data(output);
         }
@@ -52,14 +56,8 @@ int main()
 
     std::thread automation_thread([&]() {
         while (is_running) {
-            if (!ui_changes) {
-                std::lock_guard<std::mutex> lock(mtx);
-                automatic_loop(sensor_input,ctrl_data);
-                std::this_thread::sleep_for(std::chrono::milliseconds(500));
-            } else {
-                std::this_thread::sleep_for(std::chrono::milliseconds(5000));
-                ui_changes = false;
-            }
+            automatic_loop(sensor_input,ctrl_data,output);
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
         }
     });
     std::thread data_thread([&]() {
