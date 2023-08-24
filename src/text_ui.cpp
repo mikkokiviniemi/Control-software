@@ -9,12 +9,12 @@ void display_help () {
     << "display : display values\n"
     << "hc : heater/cooler toggle\n"
     << "camera : camera toggle\n"
-    << "quit : Quit UI\n";
+    << "apply : apply changes\n";
 }
 //Simple ui for speed of conveyor input return uint8_t
 uint8_t soc_ui (){
     std::string input;
-    std::cout << "Input for new speed (1,0): ";
+    std::cout << "Input for new speed (0-255): ";
     std::getline(std::cin,input);
 
     uint8_t new_speed = static_cast<uint8_t>(std::stoi(input));
@@ -40,7 +40,7 @@ bool camera_ui (){
 void json_ui (json& output, const json& input, const json& input_2) {
 
     while(true) {
-        std::cout << "[help,soc,hc,camera,display,quit] ";
+        std::cout << "[help,soc,hc,camera,display,apply] ";
         std::string choice;
         std::cout << ">";
         std::getline(std::cin,choice);
@@ -65,8 +65,8 @@ void json_ui (json& output, const json& input, const json& input_2) {
             std::cout << input_2.dump(4) << "\n";
             std::cout << output.dump(4) << "\n";
         }
-        else if (choice == "quit") {
-            std::cout << "quit\n";
+        else if (choice == "apply") {
+            std::cout << "Changes applied!\n";
             break;
         }
         else {
