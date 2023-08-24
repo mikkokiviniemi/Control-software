@@ -36,7 +36,7 @@ int main()
     {"cooler", false },
     {"qc_camera_status", false }
     };
-    sensor_input = dummy_data_generator(sensor_input, ctrl_data);
+    dummy_data_generator(sensor_input, ctrl_data);
     bool is_running = true;
     std::thread ui_thread([&]() {
         while (is_running) {
@@ -56,7 +56,7 @@ int main()
     std::thread data_thread([&]() {
         while (is_running) {
             {
-                sensor_input = dummy_data_generator(sensor_input, ctrl_data);
+                dummy_data_generator(sensor_input, ctrl_data);
                 std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
                 sensor_input.time_stamp = { std::chrono::system_clock::to_time_t(now) };
             }
