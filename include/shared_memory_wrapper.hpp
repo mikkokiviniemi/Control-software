@@ -25,9 +25,9 @@ public:
     simulation_shm_wrapper& operator=(const simulation_shm_wrapper&) = delete;
     simulation_shm_wrapper& operator=(simulation_shm_wrapper&&) = default;
 
-    int16_t read_temperature_sensor(uint8_t index);
-    uint8_t read_conveyor_speed_sensor();
-    uint16_t read_qc_camera_feed();
+    int16_t read_temperature_sensor(uint8_t index) const;
+    uint8_t read_conveyor_speed_sensor() const;
+    uint16_t read_qc_camera_feed() const;
 
     void set_conveyor_target_speed(uint8_t target_speed);
     void set_heaters(uint8_t heaters);
@@ -35,15 +35,14 @@ public:
     void set_camera_status(uint8_t camera_status);
 
 
-
 private:
     std::string filename;
     std::size_t block_size;
-    uint8_t* ptr_to_memory;
-    bool master;
+    void* ptr_to_memory;
+    uint8_t* value_ptr;
 
     int get_shared_block(std::size_t size);
-    uint8_t* attach_memory_block();
+    void* attach_memory_block();
     //Detach the memory block from process, and return boolean if succesful or not
     bool detach_memory_block();
     bool destroy_memory_block();
