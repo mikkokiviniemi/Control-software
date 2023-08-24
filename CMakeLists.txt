@@ -11,7 +11,7 @@ add_executable(first main.cpp)
 add_executable(second shm_test.cpp) 
 
 add_subdirectory(src)
-target_link_libraries(first text_ui json_output dummy_data automatic_controls)
+target_link_libraries(first text_ui json_output dummy_data automatic_controls shared_memory_wrapper)
 
-target_link_libraries(second text_ui json_output dummy_data automatic_controls)
+target_link_libraries(second text_ui json_output dummy_data automatic_controls shared_memory_wrapper)
 add_subdirectory(tests)

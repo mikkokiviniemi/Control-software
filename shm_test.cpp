@@ -14,6 +14,17 @@ int main()
 
     int camera_status{ 0 };
 
+
+    // int value{0};
+
+    // while (value == 0)
+    // {
+    //     std::cout << "Give value to input (0 to quit): ";
+    //     int input;
+    //     std::cin >> input;
+    //     value = input;
+    // }
+    
     while (camera_status != 1)
     {
         std::cout << "Temp_sensors:\n";
