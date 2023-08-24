@@ -1,4 +1,6 @@
 #include "automatic_controls.hpp"
+#include <iostream>
+#include <bitset>
 
 //Calculates mean temperature from sensor data
 int16_t mean_temp (const sensor_data& data) {
@@ -26,14 +28,24 @@ uint8_t conveyor_control(const sensor_data &data)
     }
     return soc;
 }
+//Toggle heater
+void toggle_heater(uint8_t& heaters, const uint8_t heater, bool state) {
+    if (state) {
+        heaters |= heater; // Set the bit to 1
+    } else {
+        heaters &= ~heater; // Set the bit to 0
+    }
+}
 //Automatic control block for heating control. Takes values from sensor_data and makes changes to heating.
 uint8_t heating_control(const sensor_data &data, uint8_t heater)
 {
+    uint8_t heaters;
     if (mean_temp(data) > MAX_TEMP) {
-        return 0;
+        toggle_heater(heaters,heater,false);
     }else {
-        return heater;
+        toggle_heater(heaters,heater,true);
     }
+    return heaters;
 }
 //Automatic control block for cooling control. Takes values from sensor_data and makes changes to cooling.
 uint8_t cooling_control(const sensor_data &data)
@@ -53,13 +65,13 @@ void automatic_loop(const sensor_data &sens_data, control_data& ctrl_data, const
         ctrl_data.speed_of_conveyor = conveyor_control(sens_data);
     }
     if (!control_json["heater1_manual_control"]) {
-        ctrl_data.heaters |= heating_control(sens_data,HEATER_1);
+        ctrl_data.heaters = heating_control(sens_data,HEATER_1);
     }
     if (!control_json["heater2_manual_control"]) {
-        ctrl_data.heaters |= heating_control(sens_data,HEATER_2);
+        ctrl_data.heaters = heating_control(sens_data,HEATER_2);
     }
     if (!control_json["heater3_manual_control"]) {
-        ctrl_data.heaters |= heating_control(sens_data,HEATER_3);
+        ctrl_data.heaters = heating_control(sens_data,HEATER_3);
     }
     if (!control_json["cooler_manual_control"]) {
         ctrl_data.cooler = cooling_control(sens_data);
