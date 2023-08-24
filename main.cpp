@@ -13,6 +13,7 @@
 #include <thread>
 #include <mutex>
 
+control_data ctrl_data{};
 std::mutex mtx; 
 
 
@@ -23,7 +24,6 @@ int main()
     uint8_t failed_control_input_validation{ 0 };
 
     sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0};
-    control_data ctrl_data{};
 
     json input1;
     json input2;
@@ -36,11 +36,15 @@ int main()
     {"cooler", false },
     {"qc_camera_status", false }
     };
-    sensor_input = dummy_data_generator(sensor_input, ctrl_data);
+    dummy_data_generator(sensor_input, ctrl_data);
     bool is_running = true;
+    bool ui_changes = false;
+
     std::thread ui_thread([&]() {
         while (is_running) {
             json_ui(output, input1, input2);
+            ui_changes = true;
+            std::lock_guard<std::mutex> lock(mtx);
             ctrl_data = json_to_control_data(output);
         }
     });
@@ -48,15 +52,20 @@ int main()
 
     std::thread automation_thread([&]() {
         while (is_running) {
-            std::lock_guard<std::mutex> lock(mtx);
-            automatic_loop(sensor_input,ctrl_data);
-            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            if (!ui_changes) {
+                std::lock_guard<std::mutex> lock(mtx);
+                automatic_loop(sensor_input,ctrl_data);
+                std::this_thread::sleep_for(std::chrono::milliseconds(500));
+            } else {
+                std::this_thread::sleep_for(std::chrono::milliseconds(5000));
+                ui_changes = false;
+            }
         }
     });
     std::thread data_thread([&]() {
         while (is_running) {
             {
-                sensor_input = dummy_data_generator(sensor_input, ctrl_data);
+                dummy_data_generator(sensor_input, ctrl_data);
                 std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
                 sensor_input.time_stamp = { std::chrono::system_clock::to_time_t(now) };
             }
