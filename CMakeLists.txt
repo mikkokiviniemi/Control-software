@@ -10,13 +10,16 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 add_executable(main main.cpp)
 
-# Add paths to Paho MQTT header files and libraries
-set(PAHO_MQTT_C_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/paho.mqtt.c/")
-set(PAHO_MQTT_CPP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/paho.mqtt.cpp/")
+find_package(eclipse-paho-mqtt-c REQUIRED)
+find_package(PahoMqttCpp REQUIRED)
 
-# Add PahoMQTT subdirectories
-add_subdirectory(${PAHO_MQTT_C_DIR})
-add_subdirectory(${PAHO_MQTT_CPP_DIR})
+# # Add paths to Paho MQTT header files and libraries
+# set(PAHO_MQTT_C_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/paho.mqtt.c/")
+# set(PAHO_MQTT_CPP_DIR "${CMAKE_CURRENT_SOURCE_DIR}/external/paho.mqtt.cpp/")
+
+# # Add PahoMQTT subdirectories
+# add_subdirectory(${PAHO_MQTT_C_DIR})
+# add_subdirectory(${PAHO_MQTT_CPP_DIR})
 
 add_subdirectory(src)
 
