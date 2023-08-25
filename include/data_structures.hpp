@@ -28,7 +28,6 @@ constexpr uint8_t HEATER_3  { 0b100 };
 *  SHM_ptr + 25  = camera data           (2 bytes)   (input)  *
 **************************************************************/
 
-
 //Control data structure
 struct control_data {
     uint8_t speed_of_conveyor;
