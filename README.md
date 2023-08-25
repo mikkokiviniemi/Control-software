@@ -43,9 +43,9 @@ data processing should be left for higher levels to handle.
 ## Prerequisites
 1) Install prerequisites for Paho
     $ sudo apt-get install build-essential gcc make cmake cmake-gui \ 
-        cmake-curses-gui libssl-dev doxygen graphviz
+        cmake-curses-gui libssl-dev
 
-2) Build and install Paho C library using cmake:
+2) Build and install Paho C library using cmake (anywhere on computer):
     
 
     $ git clone https://github.com/eclipse/paho.mqtt.c.git
@@ -57,13 +57,12 @@ data processing should be left for higher levels to handle.
     $ sudo cmake --build build/ --target install
     $ sudo ldconfig
 
-3) Build and install Paho C++ library using cmake
+3) Build and install Paho C++ library using cmake (anywhere on computer):
 
     $ git clone https://github.com/eclipse/paho.mqtt.cpp
     $ cd paho.mqtt.cpp
 
-    $ cmake -Bbuild -H. -DPAHO_BUILD_STATIC=ON \
-        -DPAHO_BUILD_DOCUMENTATION=TRUE
+    $ cmake -Bbuild -H. -DPAHO_BUILD_STATIC=ON
     $ sudo cmake --build build/ --target install
     $ sudo ldconfig
 

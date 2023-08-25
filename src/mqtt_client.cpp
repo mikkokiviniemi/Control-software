@@ -48,12 +48,15 @@ void MQTT_Client::message_arrived(mqtt::const_message_ptr msg) {
     std::string payload = msg->get_payload_str();
     std::string topic = msg->get_topic();
 
-    json json_UI_input = json::parse(payload);
+    // json json_UI_input = json::parse(payload);
+
+    std::cout << "Message arrived! Topic: " << topic << " , payload: " << payload << '\n';
 
     // what to do with the data?
     // if (topic == TOPIC_RECEIVE) {
 
 }
+
 
 // a function that the callback uses
 void MQTT_Client::connection_lost(const std::string& cause) {
