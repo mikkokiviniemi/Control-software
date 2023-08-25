@@ -4,6 +4,7 @@
 #include "json_output.hpp"
 #include "input_validation.hpp"
 #include "automatic_controls.hpp"
+#include "mqtt_client.hpp"
 
 
 #include "external/json.hpp"
@@ -20,7 +21,7 @@ std::mutex mtx;
 int main()
 {
 
-    uint16_t failed_sensor_input_validation{ 0 };
+/*     uint16_t failed_sensor_input_validation{ 0 };
     uint8_t failed_control_input_validation{ 0 };
 
     sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0};
@@ -77,7 +78,23 @@ int main()
 
     automation_thread.join();
     data_thread.join();
-    ui_thread.join();
+    ui_thread.join(); */
+
+    MQTT_Client test (ADDRESS, USER_ID);
+    test.connect_broker();
+    test.subscribe(TOPIC_RECEIVE);
+    while (true) {
+        std::cout << "p to publish, q to quit:\n";
+        std::string option;
+        std::getline(std::cin, option);
+        if ( option == "p") { 
+            test.publish(TOPIC_SEND, PAYLOAD);
+        }
+        if (option == "q") {
+            break;
+        }
+
+    }
 
 
     return 0;
