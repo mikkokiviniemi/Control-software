@@ -19,8 +19,7 @@ add_subdirectory(${PAHO_MQTT_C_DIR})
 add_subdirectory(${PAHO_MQTT_CPP_DIR})
 
 add_subdirectory(src)
-target_link_libraries(main text_ui json_output dummy_data mqtt_client)
 
+target_link_libraries(main text_ui json_output dummy_data mqtt_client automatic_controls)
 
-
-# add_subdirectory(tests)
+add_subdirectory(tests)
