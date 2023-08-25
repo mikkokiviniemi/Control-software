@@ -1,146 +1,86 @@
+#include "data_structures.hpp"
 #include "text_ui.hpp"
+#include "dummy_data.hpp"
+#include "json_output.hpp"
+#include "input_validation.hpp"
+#include "automatic_controls.hpp"
+
+
+#include "external/json.hpp"
 
 #include <iostream>
-#include <vector>
 #include <chrono>
+#include <thread>
+#include <mutex>
 
-struct sensor_data {
-    uint8_t speed_of_conveyor;
-    uint16_t qc_camera_fails;
+control_data ctrl_data{};
+std::mutex mtx; 
 
-    int16_t temp_sensor01;
-    int16_t temp_sensor02;
-    int16_t temp_sensor03;
-    int16_t temp_sensor04;
-    int16_t temp_sensor05;
-    int16_t temp_sensor06;
-    int16_t temp_sensor07;
-    int16_t temp_sensor08;
-    int16_t temp_sensor09;
-    int16_t temp_sensor10;
-
-    std::time_t time_stamp;
-};
-/*
-struct control_data {
-    uint8_t speed_of_conveyor;
-    uint8_t heaters_cooler;
-    uint8_t camera_toggle;
-};*/
-
-//Simple data_generator
-std::vector<sensor_data> dummy_data_generator(int amount) {
-    std::vector<sensor_data> dummy_data;
-    for (int i = 0; i < amount; i++) {
-        sensor_data data_block = {1,1,1,1,1,1,1,1,1,1,1,1,std::time(nullptr)};
-        dummy_data.push_back(data_block);
-    }
-    return dummy_data;
-}
-
-/*
-JSON Output:
-{
-    "speed_of_conveyor" : int,
-    "heater_1": bool,
-    "heater_2": bool,
-    "heater_3": bool,
-    "cooler": bool,
-    "qc_camera_status": bool,
-    "temp_sensor01": float,
-    "temp_sensor02": float,
-    "temp_sensor03": float,
-    "temp_sensor04": float,
-    "temp_sensor05": float,
-    "temp_sensor06": float,
-    "temp_sensor07": float,
-    "temp_sensor08": float,
-    "temp_sensor09": float,
-    "temp_sensor10": float,
-    "time_stamp": value
-}
-*/
-/*
-JSON Output_2:
-
-{
-    "qc_camera_fails": ???,
-    "time_stamp": value
-}
-*/
-
-/*
-JSON Commands:
-{
-    "speed_of_conveyor" : int,
-    "heater_1": bool,
-    "heater_2": bool,
-    "heater_3": bool,
-    "cooler": bool,
-    "qc_camera_status": bool,
-}
-*/
 
 int main()
 {
-    bool systems_online{ true };
-    uint8_t speed_of_conveyor = 0x00;
-    uint8_t heaters_cooler = 0x00;
-    uint8_t camera_toggle = 0x00;
 
-    /*bool manual_heaters{ false };
-    bool manual_cooler{ false };
-    bool manual_conveyor{ false };
-    bool qc_camera{ false };
-    */
-    
+    uint16_t failed_sensor_input_validation{ 0 };
+    uint8_t failed_control_input_validation{ 0 };
 
-    while (systems_online)
+    sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0};
+
+    json input1;
+    json input2;
+    json output
     {
-        //read_sensor_data()
-        
-    //if UI decides to manual override, it will circumvent automatic control
-        //read_ui_control()
+    {"speed_of_conveyor", 0 },
+    {"heater_1", false },
+    {"heater_2", false },
+    {"heater_3", false },
+    {"cooler", false },
+    {"qc_camera_status", false },
+    {"conveyor_manual_control", false},
+    {"heater1_manual_control", false},
+    {"heater2_manual_control" , false},
+    {"heater3_manual_control", false},
+    {"cooler_manual_control", false}
 
+    };
+    dummy_data_generator(sensor_input, ctrl_data);
+    bool is_running = true;
 
-    // The control functions writes the control data directly to shared memory
-        //conveyor_control()
-        //heating_control()
-        //cooling_control()
-        
-        //data_transformation()
-        //send_data_to_ui()
-        //if (logging_enabled())
-        {
-            //log_data()    
+    std::thread ui_thread([&]() {
+        while (is_running) {
+            json_ui(output, input1, input2);
+            std::lock_guard<std::mutex> lock(mtx);
+            ctrl_data = json_to_control_data(output);
         }
-        json input1 = {
-            {"speed_of_conveyor", 5},
-            {"heater_1", true},
-            {"heater_2", false},
-            {"heater_3", true},
-            {"cooler", false},
-            {"qc_camera_status", true},
-            {"temp_sensor01", 25.5},
-            {"temp_sensor02", 26.0},
-            {"temp_sensor03", 25.8},
-            {"temp_sensor04", 27.3},
-            {"temp_sensor05", 24.9},
-            {"temp_sensor06", 26.5},
-            {"temp_sensor07", 25.7},
-            {"temp_sensor08", 26.2},
-            {"temp_sensor09", 25.1},
-            {"temp_sensor10", 26.7},
-            {"time_stamp", 1630000000}
-        };
-        json input2 = {
-            {"qc_camera_fails", nullptr},
-            {"time_stamp", 1630000000}
-        };
-        json output;
-        json_ui(output,input1,input2);
+    });
 
-    }
+
+    std::thread automation_thread([&]() {
+        while (is_running) {
+            automatic_loop(sensor_input,ctrl_data,output);
+            std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        }
+    });
+    std::thread data_thread([&]() {
+        while (is_running) {
+            {
+                dummy_data_generator(sensor_input, ctrl_data);
+                std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
+                sensor_input.time_stamp = { std::chrono::system_clock::to_time_t(now) };
+            }
+            {
+                input1 = create_output_sensor_data(sensor_input, ctrl_data);
+                input2 = create_camera_feed_output(sensor_input);
+            }
+            std::this_thread::sleep_for(std::chrono::milliseconds(1000));
+        }
+    });
+
+    automation_thread.join();
+    data_thread.join();
+    ui_thread.join();
+
 
     return 0;
 }
+
+

@@ -12,18 +12,18 @@ void display_help () {
     << "quit : Quit UI\n";
 }
 //Simple ui for speed of conveyor input return uint8_t
-int soc_ui (){
+uint8_t soc_ui (){
     std::string input;
-    std::cout << "Iput for new speed: ";
+    std::cout << "Input for new speed (1,0): ";
     std::getline(std::cin,input);
 
-    int new_speed = std::stoi(input);
+    uint8_t new_speed = static_cast<uint8_t>(std::stoi(input));
     return new_speed;
 }
 //Simple ui for heater and cooler input return uint8_t
 bool hc_ui (std::string name){
     std::string input;
-    std::cout << "Iput for new " << name << " value (1,0): ";
+    std::cout << "Input for new " << name << " value (1,0): ";
     std::getline(std::cin,input);
     int value = std::stoi(input);
     return value;
@@ -31,19 +31,13 @@ bool hc_ui (std::string name){
 //Simple ui for camera_toggle input return uint8_t
 bool camera_ui (){
     std::string input;
-    std::cout << "Iput for camera toggle: ";
+    std::cout << "Input for camera toggle (1,0): ";
     std::getline(std::cin,input);
     int camera_toggle = std::stoi(input);
     return camera_toggle;
 }
 //Simple text ui 
-void json_ui (json& output,const json& input, const json& input_2) {
-    output["speed_of_conveyor"] = input["speed_of_conveyor"];
-    output["heater_1"] = input["heater_1"];
-    output["heater_2"] = input["heater_2"];
-    output["heater_3"] = input["heater_3"];
-    output["cooler"] = input["cooler"];
-    output["qc_camera_status"] = input["qc_camera_status"];
+void json_ui (json& output, const json& input, const json& input_2) {
 
     while(true) {
         std::cout << "[help,soc,hc,camera,display,quit] ";

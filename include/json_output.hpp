@@ -1,13 +1,15 @@
 #ifndef JSON_OUTPUT_H
 #define JSON_OUTPUT_H
 #include "json.hpp"
+#include "data_structures.hpp"
 
-#include <array>
 
 using json = nlohmann::json;
 
-json create_output_sensor_data(const sensor_data& test);
-json create_camera_feed_output(const sensor_data& test);
+json create_output_sensor_data(const sensor_data& sensor_input, const control_data& ctrl_data);
+json create_camera_feed_output(const sensor_data& sensor_input);
+
+control_data json_to_control_data(const json& json_elem);
 
 // time functions for time_stamp
 // std::put_time(std::localtime(/*std::time_t*/), "%FT%TGMT+2")
