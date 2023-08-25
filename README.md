@@ -35,3 +35,35 @@ data processing should be left for higher levels to handle.
 - Mikko Kiviniemi
 - Oskar Siegfrids
 - Anna Pikkarainen
+
+
+
+# Build
+
+## Prerequisites
+1) Install prerequisites for Paho
+    $ sudo apt-get install build-essential gcc make cmake cmake-gui \ 
+        cmake-curses-gui libssl-dev
+
+2) Build and install Paho C library using cmake (anywhere on computer):
+    
+
+    $ git clone https://github.com/eclipse/paho.mqtt.c.git
+    $ cd paho.mqtt.c
+    $ git checkout v1.3.8
+
+    $ cmake -Bbuild -H. -DPAHO_ENABLE_TESTING=OFF -DPAHO_BUILD_STATIC=ON \
+        -DPAHO_WITH_SSL=ON -DPAHO_HIGH_PERFORMANCE=ON
+    $ sudo cmake --build build/ --target install
+    $ sudo ldconfig
+
+3) Build and install Paho C++ library using cmake (anywhere on computer):
+
+    $ git clone https://github.com/eclipse/paho.mqtt.cpp
+    $ cd paho.mqtt.cpp
+
+    $ cmake -Bbuild -H. -DPAHO_BUILD_STATIC=ON
+    $ sudo cmake --build build/ --target install
+    $ sudo ldconfig
+
+
