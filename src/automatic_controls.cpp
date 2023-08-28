@@ -33,6 +33,10 @@ int16_t mean_temp (const sensor_data& data) {
     data.temp_sensor10;
     return addition/10;
 }
+// max_temp (use for checking)
+
+//vikatila
+
 //Automatic control block for conveyor speed control. Takes values from sensor_data and makes changes to conveyor speed.
 uint8_t conveyor_control(const sensor_data &data)
 {

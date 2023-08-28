@@ -4,6 +4,7 @@
 #include "data_structures.hpp"
 #include "dummy_data.hpp"
 #include "input_validation.hpp"
+#include "automatic_controls.hpp"
 
 TEST_CASE("Dummy data")
 {
@@ -35,4 +36,14 @@ TEST_CASE("Data validation")
 TEST_CASE("Control software")
 {
      
+}
+
+TEST_CASE("Automatic control")
+{
+    sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0};
+    CHECK(mean_temp(sensor_input) == 25);
+    CHECK(conveyor_control(sensor_input) == OPTIMAL_SOC);
+    CHECK(heating_control(sensor_input) == 0b00000111);
+    CHECK(cooling_control(sensor_input) == 0);
+
 }

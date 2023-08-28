@@ -8,6 +8,7 @@
 using json = nlohmann::json;
 
 constexpr int16_t MAX_TEMP = 800;
+
 constexpr int16_t COOLING_TEMP = 400;
 constexpr uint8_t OPTIMAL_SOC = 230;
 constexpr bool FAILURE_MODE = false;

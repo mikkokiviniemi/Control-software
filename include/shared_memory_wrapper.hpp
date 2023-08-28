@@ -1,6 +1,8 @@
 #ifndef SHARED_MEMORY_WRAPPER_HPP
 #define SHARED_MEMORY_WRAPPER_HPP
 
+#include "data_structures.hpp"
+
 #include <cstdint>
 #include <iostream>
 #include <string>
@@ -33,7 +35,10 @@ public:
     void set_heaters(uint8_t heaters);
     void set_cooler(uint8_t cooler);
     void set_camera_status(uint8_t camera_status);
+    void running(bool value);
 
+    void read_sensor_inputs(sensor_data& sensor_input) const;
+    void set_control_data(control_data& ctrl_data);
 
 private:
     std::string filename;

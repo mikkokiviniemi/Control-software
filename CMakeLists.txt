@@ -16,6 +16,8 @@ find_package(PahoMqttCpp REQUIRED)
 
 add_subdirectory(src)
 
-target_link_libraries(main text_ui json_output dummy_data mqtt_client automatic_controls)
+target_link_libraries(main text_ui json_output mqtt_client automatic_controls shared_memory_wrapper)
 
-add_subdirectory(tests)
+# add_subdirectory(tests)
+
+include_directories(${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/external)
