@@ -25,7 +25,9 @@ class MQTT_Client : public mqtt::callback
         virtual void message_arrived(mqtt::const_message_ptr msg) override;
         virtual void connection_lost(const std::string& cause) override;
 
-
+        json input_control_data;
+        bool json_handled{ true };
+        
     private:
         mqtt::async_client client;
 

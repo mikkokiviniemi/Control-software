@@ -45,15 +45,15 @@ void MQTT_Client::subscribe(const std::string& topic){
 }
 
 void MQTT_Client::message_arrived(mqtt::const_message_ptr msg) {
-    std::string payload = msg->get_payload_str();
-    std::string topic = msg->get_topic();
+    // std::string topic = msg->get_topic();
 
-    // json json_UI_input = json::parse(payload);
-
-    std::cout << "Message arrived! Topic: " << topic << " , payload: " << payload << '\n';
-
-    // what to do with the data?
-    // if (topic == TOPIC_RECEIVE) {
+    while (!json_handled) {
+        std::cout << "waiting for message to be read...\n";
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+    }
+    input_control_data = json::parse(msg->get_payload_str());
+    json_handled = true;
+    // std::cout << "Message arrived! Topic: " << topic << " , payload: " << msg->get_payload_str() << '\n';
 
 }
 
