@@ -1,5 +1,9 @@
 #include "mqtt_client.hpp"
 #include "json_output.hpp"
+#include "json.hpp"
+
+#include <chrono>
+#include <thread>
 
 MQTT_Client::MQTT_Client(const std::string& address, const std::string& user_id) 
     : client(address,user_id) {
@@ -26,7 +30,7 @@ void MQTT_Client::disconnect_broker() {
 
 void MQTT_Client::publish(const std::string& topic, const std::string& payload){
     mqtt::message_ptr msg = mqtt::make_message(topic, payload);
-    msg->set_qos(1);
+    msg->set_qos(0);
 
     try {
         client.publish(msg)->wait();
@@ -37,7 +41,7 @@ void MQTT_Client::publish(const std::string& topic, const std::string& payload){
 
 void MQTT_Client::subscribe(const std::string& topic){
     try {
-        client.subscribe(topic, 1)->wait();
+        client.subscribe(topic, 0)->wait();
         std::cout << "subscribed to topic " << topic << '\n';
     } catch (const mqtt::exception& e){
         std::cerr << "Error: " << e.what() << '\n';
@@ -57,20 +61,9 @@ void MQTT_Client::message_arrived(mqtt::const_message_ptr msg) {
 
 }
 
-
 // a function that the callback uses
 void MQTT_Client::connection_lost(const std::string& cause) {
     std::cout << "\nConnection lost" << '\n';
     if (!cause.empty())
         std::cout << "\tcause: " << cause << '\n';
 }
-
-
-
-
-
-
-
-
-
-

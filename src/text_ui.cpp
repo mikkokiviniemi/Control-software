@@ -38,8 +38,8 @@ bool camera_ui (){
 }
 //Simple text ui 
 void json_ui (json& output, const json& input, const json& input_2) {
-
-    while(true) {
+    
+    while(true) {  
         std::cout << "[help,manual,soc,hc,camera,display,apply] ";
         std::string choice;
         std::string manual;

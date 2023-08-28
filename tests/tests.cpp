@@ -5,8 +5,10 @@
 #include "dummy_data.hpp"
 #include "input_validation.hpp"
 #include "automatic_controls.hpp"
+
 #include "mqtt_client.hpp"
 #include "mqtt/async_client.h"
+
 
 TEST_CASE("Dummy data")
 {
@@ -73,5 +75,17 @@ TEST_CASE("MQTT Client")
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     CHECK(test_client_user.input_control_data == json::parse(control_data_json.dump()));
     CHECK(test_client_user.json_handled == true);
+}
+
+/*
+TEST_CASE("Automatic control")
+{
+    sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0};
+    CHECK(mean_temp(sensor_input) == 25);
+    CHECK(conveyor_control(sensor_input) == OPTIMAL_SOC);
+    CHECK(heating_control(sensor_input) == 0b00000111);
+    CHECK(cooling_control(sensor_input) == 0);
+
 
 }
+*/
