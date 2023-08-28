@@ -19,6 +19,11 @@ std::mutex mtx;
 
 int main()
 {
+    //FOR AUTOMATION
+
+    auto start_time = std::chrono::system_clock::now();
+    auto heater_timing = std::chrono::system_clock::now();
+    bool heater_period = true;
 
     uint16_t failed_sensor_input_validation{ 0 };
     uint8_t failed_control_input_validation{ 0 };
@@ -56,21 +61,27 @@ int main()
 
     std::thread automation_thread([&]() {
         while (is_running) {
-            automatic_loop(sensor_input,ctrl_data,output);
+            if (std::chrono::system_clock::now() - start_time > std::chrono::seconds(18)) {
+                if (std::chrono::system_clock::now() - heater_timing > std::chrono::seconds(10) && heater_period) { 
+                    heater_period = false;
+                    heater_timing = std::chrono::system_clock::now();
+                }
+                if (std::chrono::system_clock::now() - heater_timing > std::chrono::seconds(20) && !heater_period) { 
+                    heater_period = true;
+                    heater_timing = std::chrono::system_clock::now();
+                }
+            }
+            automatic_loop(sensor_input,ctrl_data,output,heater_period);
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
         }
     });
     std::thread data_thread([&]() {
         while (is_running) {
-            {
                 dummy_data_generator(sensor_input, ctrl_data);
                 std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
                 sensor_input.time_stamp = { std::chrono::system_clock::to_time_t(now) };
-            }
-            {
                 input1 = create_output_sensor_data(sensor_input, ctrl_data);
                 input2 = create_camera_feed_output(sensor_input);
-            }
             std::this_thread::sleep_for(std::chrono::milliseconds(1000));
         }
     });

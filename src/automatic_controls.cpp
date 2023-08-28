@@ -76,41 +76,41 @@ uint8_t cooling_control(const sensor_data &data)
 }
 
 //Loop block for automation
-void automatic_loop(const sensor_data &sens_data, control_data& ctrl_data, const json& control_json)
+void automatic_loop(const sensor_data &sens_data, control_data& ctrl_data, const json& control_json, const bool& heater_period)
 {
     
     bool failure_mode = (sens_data.qc_camera_fails != 0); //IF no camera fails -> failure_mode = false
     
-    if (!control_json["conveyor_manual_control"]) {
-        if (failure_mode) {
+    if (!control_json["conveyor_manual_control"]) { // Check if manual control is on
+        if (failure_mode) { //If failure mode on
             ctrl_data.speed_of_conveyor = 0;
         } else {
             ctrl_data.speed_of_conveyor = conveyor_control(sens_data);
         }
     }
-    if (!control_json["heater1_manual_control"]) {
-        if (failure_mode) {
+    if (!control_json["heater1_manual_control"]) { // Check if manual control is on
+        if (failure_mode || !heater_period) { //If failure mode on or not heater_period
             toggle_heater(ctrl_data.heaters,HEATER_1,false);
         } else {
             ctrl_data.heaters = heating_control(sens_data,HEATER_1);
         }
     }
-    if (!control_json["heater2_manual_control"]) {
-        if (failure_mode) {
+    if (!control_json["heater2_manual_control"]) { // Check if manual control is on
+        if (failure_mode || !heater_period) { //If failure mode on or not heater_period
             toggle_heater(ctrl_data.heaters,HEATER_2,false);
         } else {
             ctrl_data.heaters = heating_control(sens_data,HEATER_2);
         }
     }
-    if (!control_json["heater3_manual_control"]) {
-        if (failure_mode) {
+    if (!control_json["heater3_manual_control"]) { // Check if manual control is on
+        if (failure_mode || !heater_period) { //If failure mode on or not heater_period
             toggle_heater(ctrl_data.heaters,HEATER_3,false);
         } else {
             ctrl_data.heaters = heating_control(sens_data,HEATER_3);
         }
     }
-    if (!control_json["cooler_manual_control"]) {
-        if (failure_mode) {
+    if (!control_json["cooler_manual_control"]) { // Check if manual control is on
+        if (failure_mode) { //If failure mode on
             ctrl_data.cooler = 0;
         } else {
             ctrl_data.cooler = cooling_control(sens_data);

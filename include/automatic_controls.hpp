@@ -20,6 +20,6 @@ uint8_t conveyor_control(const sensor_data& data);
 //cooling_control()
 uint8_t cooling_control(const sensor_data& data);
 
-void automatic_loop(const sensor_data &sens_data, control_data& ctrl_data, const json& control_json);
+void automatic_loop(const sensor_data &sens_data, control_data& ctrl_data, const json& control_json,const bool& heater_period);
 
 #endif
