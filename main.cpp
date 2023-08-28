@@ -3,8 +3,10 @@
 #include "json_output.hpp"
 #include "input_validation.hpp"
 #include "automatic_controls.hpp"
+
 #include "mqtt_client.hpp"
 #include "shared_memory_wrapper.hpp"
+
 
 #include "json_fwd.hpp"
 #include "json.hpp"
@@ -168,6 +170,7 @@ int main()
     // automation_thread.join();
     // data_thread.join();
     // ui_thread.join(); 
+
 
     return 0;
 }
