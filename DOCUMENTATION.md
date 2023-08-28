@@ -45,9 +45,6 @@ git clone https://github.com/eclipse/paho.mqtt.cpp
 cd paho.mqtt.cpp
 ```
 ```bash
-cd paho.mqtt.cpp
-```
-```bash
 cmake -Bbuild -H. -DPAHO_BUILD_STATIC=ON
 ```
 ```bash
@@ -63,11 +60,7 @@ git clone git@github.com:mikkokiviniemi/Control-software.git
 ```
 ```bash
 cd Control-software
-```
-```bash
 cmake -S . -B build
-```
-```bash
 make -C build
 ```
 ### Run
