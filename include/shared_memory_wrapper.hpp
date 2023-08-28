@@ -35,7 +35,7 @@ public:
     void set_heaters(uint8_t heaters);
     void set_cooler(uint8_t cooler);
     void set_camera_status(uint8_t camera_status);
-    void quit(bool value);
+    void running(bool value);
 
     void read_sensor_inputs(sensor_data& sensor_input) const;
     void set_control_data(control_data& ctrl_data);

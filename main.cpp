@@ -6,7 +6,8 @@
 #include "mqtt_client.hpp"
 #include "shared_memory_wrapper.hpp"
 
-#include "external/json.hpp"
+#include "json_fwd.hpp"
+#include "json.hpp"
 
 #include <iostream>
 #include <chrono>
@@ -26,6 +27,7 @@ int main()
 {
 
  //   simulation_shm_wrapper sensor_data_input{ std::string{"shm_file"} };
+    simulation_shm_wrapper shm{ std::string{"dummy_smh"} };
     
     
     uint16_t failed_sensor_input_validation{ 0 };
@@ -48,13 +50,10 @@ int main()
     {"qc_camera_status", false },
     {"conveyor_manual_control", true},
     {"heater1_manual_control", true},
-    {"heater2_manual_control" , true},
+    {"heater2_manual_control", true},
     {"heater3_manual_control", true},
     {"cooler_manual_control", true}
-
     };
-
-    std::string str_dump{ control_data_json.dump() };
     
     //control_data_json = UI_MQTT_PALIKKA(sensor_data_json, control_data_json, camera_feed_json);
     //
@@ -84,16 +83,16 @@ int main()
     lähetetään control data (YKKÖS RYHMÄLLE)
 
     */
-    simulation_shm_wrapper shm{ std::string{"dummy_smh"} };
 
     // // Initialize and connect MQTT client, subscribe to topic
     MQTT_Client mqtt_client (ADDRESS, USER_ID);
     mqtt_client.connect_broker();
     mqtt_client.subscribe(TOPIC_RECEIVE);
 
-
-    std::cout << "Toimiiko tämä vielä?1" << str_dump << std::endl;
-    mqtt_client.publish(TOPIC_RECEIVE, str_dump);
+    std::cout << "JSON_DUMP: " << control_data_json.dump() << '\n';
+    
+    std::cout << "Toimiiko tämä vielä?1" << std::endl;
+    mqtt_client.publish(TOPIC_RECEIVE, control_data_json.dump());
     std::cout << "Toimiiko tämä vielä?1" << std::endl;
     // set timer
     std::chrono::time_point<std::chrono::system_clock> mqtt_timer = std::chrono::system_clock::now();

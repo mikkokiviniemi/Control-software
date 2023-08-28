@@ -25,7 +25,7 @@ simulation_shm_wrapper::simulation_shm_wrapper(const std::string& new_filename, 
     value_ptr = reinterpret_cast<uint8_t*>(ptr_to_memory);
 
     // Set the state to be read by other process
-    quit(false);
+    running(true);
 }
 
 // Read temperature sensor ranging from 1 to 10, return -999 if wrong indexing
@@ -69,15 +69,15 @@ void simulation_shm_wrapper::set_camera_status(uint8_t camera_status)
     *(value_ptr + 24) = camera_status;
 }
 
-void simulation_shm_wrapper::quit(bool value)
+void simulation_shm_wrapper::running(bool value)
 {
     if (value)
     {
-        *(value_ptr + 27) = 1;
+        *(value_ptr + 27) = 0;
     }
     else
     {
-        *(value_ptr + 27) = 0;
+        *(value_ptr + 27) = 1;
     }
 }
 
@@ -111,7 +111,7 @@ void simulation_shm_wrapper::set_control_data(control_data& ctrl_data)
 simulation_shm_wrapper::~simulation_shm_wrapper()
 {
     //Give signal to other process to quit
-    quit(true);
+    running(false);
     
     if (destroy_memory_block())
     {
