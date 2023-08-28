@@ -9,7 +9,7 @@ using json = nlohmann::json;
 
 constexpr int16_t MAX_TEMP = 800;
 constexpr int16_t COOLING_TEMP = 600;
-constexpr uint8_t OPTIMAL_SOC = 255;
+constexpr uint8_t OPTIMAL_SOC = 229;
 
 int16_t mean_temp(const sensor_data &data);
 
