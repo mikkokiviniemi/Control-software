@@ -21,7 +21,7 @@ const std::string USER_ID = "control_sw";
 const std::string TOPIC_SEND_SENSOR = "sensor_control_data";
 const std::string TOPIC_SEND_CAMERA = "camera_data";
 // const std::string TOPIC_RECEIVE = "conveyer_params"; // from UI
-const std::string TOPIC_RECEIVE = "test_topic"; // from UI
+const std::string TOPIC_RECEIVE = "test2_topic"; // from UI
 
 int main()
 {
@@ -37,7 +37,7 @@ int main()
 
     control_data ctrl_data{0,0,0,0};
     sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0 };
-
+        
     json sensor_data_json; // output to UI
     json camera_feed_json; // output to UI
     json control_data_json // input from UI
@@ -89,11 +89,7 @@ int main()
     mqtt_client.connect_broker();
     mqtt_client.subscribe(TOPIC_RECEIVE);
 
-    std::cout << "JSON_DUMP: " << control_data_json.dump() << '\n';
-    
-    std::cout << "Toimiiko tämä vielä?1" << std::endl;
     mqtt_client.publish(TOPIC_RECEIVE, control_data_json.dump());
-    std::cout << "Toimiiko tämä vielä?1" << std::endl;
     // set timer
     std::chrono::time_point<std::chrono::system_clock> mqtt_timer = std::chrono::system_clock::now();
 
@@ -112,33 +108,24 @@ int main()
         // Send/receive rate to/from UI is set to one second
         if (now - mqtt_timer >= std::chrono::milliseconds(1000))
         {
-            std::cout << "Toimiiko tämä vielä?2" << std::endl;
             //Tehdään (output jsonit jotka lähetetään UI:lle)
             sensor_data_json = create_output_sensor_data(sensor_input, ctrl_data);
-            std::cout << "Toimiiko tämä vielä?3" << std::endl;
             camera_feed_json = create_camera_feed_output(sensor_input);
 
-            std::cout << "Toimiiko tämä vielä?4" << std::endl;
             /*send_data_json_MQTT()*/
             mqtt_client.publish(TOPIC_SEND_SENSOR, sensor_data_json.dump());
-            std::cout << "Toimiiko tämä vielä?5" << std::endl;
             mqtt_client.publish(TOPIC_SEND_CAMERA, camera_feed_json.dump());
             
-            std::cout << "Toimiiko tämä vielä?6" << std::endl;
             std::cout << "Sensor_data published:\n" << sensor_data_json << '\n';
-            std::cout << "Toimiiko tämä vielä?7" << std::endl;
             std::cout << "Camera_feed published:\n" << camera_feed_json << '\n';
             
             //Fetch MQTT control-data and store it in a json
-            std::cout << "Toimiiko tämä vielä?8" << std::endl;
             control_data_json = mqtt_client.input_control_data;
-            std::cout << "Toimiiko tämä vielä?9" << std::endl;
             ctrl_data = json_to_control_data(control_data_json);
             mqtt_timer = now;
         }
         
         // Automatic loop changes the control data
-            std::cout << "Toimiiko tämä vielä?10" << std::endl;
         automatic_loop(sensor_input, ctrl_data, control_data_json);
 
         // Send control data to simulation

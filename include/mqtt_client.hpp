@@ -21,7 +21,20 @@ class MQTT_Client : public mqtt::callback
         virtual void message_arrived(mqtt::const_message_ptr msg) override;
         virtual void connection_lost(const std::string& cause) override;
 
-        json input_control_data;
+        json input_control_data
+        {
+            {"speed_of_conveyor", 0 },
+            {"heater_1", false },
+            {"heater_2", false },
+            {"heater_3", false },
+            {"cooler", false },
+            {"qc_camera_status", false },
+            {"conveyor_manual_control", true},
+            {"heater1_manual_control", true},
+            {"heater2_manual_control", true},
+            {"heater3_manual_control", true},
+            {"cooler_manual_control", true}
+        };
         bool json_handled{ true };
 
     private:

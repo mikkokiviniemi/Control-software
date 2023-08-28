@@ -251,7 +251,7 @@ void simulate_conveyor(sensor_data& dummy_data, const control_data& ctrl_data)
     dummy_shm_wrapper dummy_data_block(std::string{ "dummy_smh" });
     sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0 };
     control_data ctrl_data{0, 0, 0, 0};
-    while (dummy_data_block.quit())
+    while (!dummy_data_block.quit())
     {
         dummy_data_generator(sensor_input, ctrl_data);
 
