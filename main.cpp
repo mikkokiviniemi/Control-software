@@ -16,15 +16,6 @@
 #include <thread>
 #include <mutex>
 
-
-// constexpr std::string ADDRESS = "5.tcp.eu.ngrok.io:18017";
-const std::string ADDRESS = "tcp://test.mosquitto.org:1883";
-const std::string USER_ID = "control_sw";
-const std::string TOPIC_SEND_SENSOR = "sensor_control_data";
-const std::string TOPIC_SEND_CAMERA = "camera_data";
-// const std::string TOPIC_RECEIVE = "conveyer_params"; // from UI
-const std::string TOPIC_RECEIVE = "test2_topic"; // from UI
-
 int main()
 {
 
@@ -87,11 +78,11 @@ int main()
     */
 
     // // Initialize and connect MQTT client, subscribe to topic
-    MQTT_Client mqtt_client (ADDRESS, USER_ID);
+    MQTT_Client mqtt_client (ADDRESS, USER_ID_CONTROL);
     mqtt_client.connect_broker();
     mqtt_client.subscribe(TOPIC_RECEIVE);
 
-    mqtt_client.publish(TOPIC_RECEIVE, control_data_json.dump());
+    // mqtt_client.publish(TOPIC_RECEIVE, control_data_json.dump());
     // set timer
     std::chrono::time_point<std::chrono::system_clock> mqtt_timer = std::chrono::system_clock::now();
 
