@@ -27,7 +27,7 @@ int main()
 {
 
  //   simulation_shm_wrapper sensor_data_input{ std::string{"shm_file"} };
-    simulation_shm_wrapper shm{ std::string{"dummy_smh"} };
+    simulation_shm_wrapper shm{ std::string{"simulation_shm"} };
     
     
     uint16_t failed_sensor_input_validation{ 0 };
