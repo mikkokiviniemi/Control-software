@@ -4,6 +4,7 @@
 #include <cstring>
 #include <filesystem>
 #include <fstream>
+#include <iostream>
 
 namespace fs = std::filesystem;
 
@@ -66,10 +67,11 @@ uint8_t dummy_shm_wrapper::read_camera_status() const
     return *(value_ptr + 24);
 }
 
-bool running()
+bool dummy_shm_wrapper::quit() const
 {
-    return *(value_ptr +)
+    return (*(value_ptr + 27) == 1);
 }
+
 
 dummy_shm_wrapper::~dummy_shm_wrapper()
 {
@@ -249,14 +251,36 @@ void simulate_conveyor(sensor_data& dummy_data, const control_data& ctrl_data)
     dummy_shm_wrapper dummy_data_block(std::string{ "dummy_smh" });
     sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0 };
     control_data ctrl_data{0, 0, 0, 0};
-    while (true)
+    while (!dummy_data_block.quit())
     {
         dummy_data_generator(sensor_input, ctrl_data);
-        
+
+        dummy_data_block.set_temperature_sensor(sensor_input.temp_sensor01, 1);
+        dummy_data_block.set_temperature_sensor(sensor_input.temp_sensor02, 2);
+        dummy_data_block.set_temperature_sensor(sensor_input.temp_sensor03, 3);
+        dummy_data_block.set_temperature_sensor(sensor_input.temp_sensor04, 4);
+        dummy_data_block.set_temperature_sensor(sensor_input.temp_sensor05, 5);
+        dummy_data_block.set_temperature_sensor(sensor_input.temp_sensor06, 6);
+        dummy_data_block.set_temperature_sensor(sensor_input.temp_sensor07, 7);
+        dummy_data_block.set_temperature_sensor(sensor_input.temp_sensor08, 8);
+        dummy_data_block.set_temperature_sensor(sensor_input.temp_sensor09, 9);
+        dummy_data_block.set_temperature_sensor(sensor_input.temp_sensor10, 10);
+
+        dummy_data_block.set_conveyor_speed_sensor(sensor_input.speed_of_conveyor);
+
+        dummy_data_block.set_qc_camera_feed(sensor_input.qc_camera_fails);
+
+        std::cout << "Data set\n";
+
+        ctrl_data.speed_of_conveyor = dummy_data_block.read_conveyor_target_speed();
+        ctrl_data.heaters = dummy_data_block.read_heaters();
+        ctrl_data.cooler = dummy_data_block.read_cooler();
+        ctrl_data.camera_toggle = dummy_data_block.read_camera_status();
+
+        std::cout << "Data read\n\n";
     }
 
-
-
+    std::cout << "Loop ended, and application quit, because of call from other process.\n";
     
-
+    return 0;
  }

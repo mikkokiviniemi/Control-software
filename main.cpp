@@ -1,6 +1,5 @@
 #include "data_structures.hpp"
 #include "text_ui.hpp"
-#include "dummy_data.hpp"
 #include "json_output.hpp"
 #include "input_validation.hpp"
 #include "automatic_controls.hpp"
@@ -14,8 +13,6 @@
 #include <thread>
 #include <mutex>
 
-control_data ctrl_data{};
-std::mutex mtx; 
 
 // constexpr std::string ADDRESS = "5.tcp.eu.ngrok.io:18017";
 const std::string ADDRESS = "tcp://test.mosquitto.org:1883";
@@ -34,7 +31,10 @@ int main()
     uint16_t failed_sensor_input_validation{ 0 };
     uint8_t failed_control_input_validation{ 0 };
 
-    sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0};
+    std::mutex mtx; 
+
+    control_data ctrl_data{0,0,0,0};
+    sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0 };
 
     json sensor_data_json; // output to UI
     json camera_feed_json; // output to UI
@@ -54,9 +54,8 @@ int main()
 
     };
 
-    dummy_data_generator(sensor_input, ctrl_data);
-    bool is_running = true;
-
+    std::string str_dump{ control_data_json.dump() };
+    
     //control_data_json = UI_MQTT_PALIKKA(sensor_data_json, control_data_json, camera_feed_json);
     //
 
@@ -85,22 +84,28 @@ int main()
     lähetetään control data (YKKÖS RYHMÄLLE)
 
     */
+    simulation_shm_wrapper shm{ std::string{"dummy_smh"} };
 
-    // Initialize and connect MQTT client, subscribe to topic
+    // // Initialize and connect MQTT client, subscribe to topic
     MQTT_Client mqtt_client (ADDRESS, USER_ID);
     mqtt_client.connect_broker();
     mqtt_client.subscribe(TOPIC_RECEIVE);
 
-    mqtt_client.publish(TOPIC_RECEIVE, control_data_json.dump());
+
+    std::cout << "Toimiiko tämä vielä?1" << str_dump << std::endl;
+    mqtt_client.publish(TOPIC_RECEIVE, str_dump);
+    std::cout << "Toimiiko tämä vielä?1" << std::endl;
     // set timer
     std::chrono::time_point<std::chrono::system_clock> mqtt_timer = std::chrono::system_clock::now();
+
+    shm.set_control_data(ctrl_data);
 
     int stop{ 0 };
 
     while (stop == 0)
     {
-        //Tuottaa dummy_dataa (muuttaa sensor_inputtia) ja laittaa timestampin
-        dummy_data_generator(sensor_input, ctrl_data);
+        //Read sensor inputs from shared memory
+        shm.read_sensor_inputs(sensor_input);
 
         std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
         sensor_input.time_stamp = std::chrono::system_clock::to_time_t(now);
@@ -108,27 +113,37 @@ int main()
         // Send/receive rate to/from UI is set to one second
         if (now - mqtt_timer >= std::chrono::milliseconds(1000))
         {
+            std::cout << "Toimiiko tämä vielä?2" << std::endl;
             //Tehdään (output jsonit jotka lähetetään UI:lle)
             sensor_data_json = create_output_sensor_data(sensor_input, ctrl_data);
+            std::cout << "Toimiiko tämä vielä?3" << std::endl;
             camera_feed_json = create_camera_feed_output(sensor_input);
 
+            std::cout << "Toimiiko tämä vielä?4" << std::endl;
             /*send_data_json_MQTT()*/
             mqtt_client.publish(TOPIC_SEND_SENSOR, sensor_data_json.dump());
+            std::cout << "Toimiiko tämä vielä?5" << std::endl;
             mqtt_client.publish(TOPIC_SEND_CAMERA, camera_feed_json.dump());
             
+            std::cout << "Toimiiko tämä vielä?6" << std::endl;
             std::cout << "Sensor_data published:\n" << sensor_data_json << '\n';
+            std::cout << "Toimiiko tämä vielä?7" << std::endl;
             std::cout << "Camera_feed published:\n" << camera_feed_json << '\n';
             
             //Fetch MQTT control-data and store it in a json
+            std::cout << "Toimiiko tämä vielä?8" << std::endl;
             control_data_json = mqtt_client.input_control_data;
+            std::cout << "Toimiiko tämä vielä?9" << std::endl;
             ctrl_data = json_to_control_data(control_data_json);
             mqtt_timer = now;
         }
         
         // Automatic loop changes the control data
+            std::cout << "Toimiiko tämä vielä?10" << std::endl;
         automatic_loop(sensor_input, ctrl_data, control_data_json);
 
         // Send control data to simulation
+        shm.set_control_data(ctrl_data);
 
         std::cout << "Input 1 to exit, 0 to continue: ";
         std::cin >> stop;

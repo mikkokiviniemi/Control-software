@@ -36,7 +36,7 @@ public:
     uint8_t read_heaters() const;
     uint8_t read_cooler() const;
     uint8_t read_camera_status() const;
-    bool running() const;
+    bool quit() const;
 
 
 private:
