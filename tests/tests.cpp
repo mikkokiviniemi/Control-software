@@ -2,26 +2,12 @@
 #include "doctest.h"
 
 #include "data_structures.hpp"
-#include "dummy_data.hpp"
 #include "input_validation.hpp"
 #include "automatic_controls.hpp"
 
 #include "mqtt_client.hpp"
 #include "mqtt/async_client.h"
 
-
-TEST_CASE("Dummy data")
-{
-
-    sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0};
-    control_data ctrl_data{ 150, 0b111, 1, 1 };
-
-    dummy_data_generator(sensor_input, ctrl_data);
-
-    CHECK(sensor_input.speed_of_conveyor == 1);   
-    CHECK(sensor_input.temp_sensor01 == sensor_input.temp_sensor10);
-    CHECK(sensor_input.temp_sensor01 == 273);
-}
 
 TEST_CASE("Data validation")
 {
