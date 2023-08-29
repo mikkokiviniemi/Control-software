@@ -3,13 +3,15 @@
 
 #include <iostream>
 #include "data_structures.hpp"
-
-#include "../external/json.hpp"
+#include "json.hpp"
+#include "mqtt_client_UI.hpp"
 
 using json = nlohmann::json;
 
-void json_ui(json &output, const json &input, const json &input_2);
+/* void json_ui(json &output, const json &input, const json &input_2); */
 
+
+int main ();
 
 #endif
 

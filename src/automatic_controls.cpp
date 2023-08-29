@@ -33,6 +33,10 @@ int16_t mean_temp (const sensor_data& data) {
     data.temp_sensor10;
     return addition/10;
 }
+// max_temp (use for checking)
+
+//vikatila
+
 //Automatic control block for conveyor speed control. Takes values from sensor_data and makes changes to conveyor speed.
 uint8_t conveyor_control(const sensor_data &data)
 {
@@ -78,7 +82,6 @@ uint8_t cooling_control(const sensor_data &data)
 //Loop block for automation
 void automatic_loop(const sensor_data &sens_data, control_data& ctrl_data, const json& control_json, const bool& heater_period, const bool& start_period)
 {
-    
     bool failure_mode = false; //IF no camera fails -> failure_mode = false
     
     if (!control_json["conveyor_manual_control"]) { // Check if manual control is on

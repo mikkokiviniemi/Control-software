@@ -23,6 +23,9 @@ simulation_shm_wrapper::simulation_shm_wrapper(const std::string& new_filename, 
     ptr_to_memory = attach_memory_block();
     //Cast to uint8_t* to be used with the reading/writing functions
     value_ptr = reinterpret_cast<uint8_t*>(ptr_to_memory);
+
+    // Set the state to be read by other process
+    running(true);
 }
 
 // Read temperature sensor ranging from 1 to 10, return -999 if wrong indexing
@@ -66,9 +69,50 @@ void simulation_shm_wrapper::set_camera_status(uint8_t camera_status)
     *(value_ptr + 24) = camera_status;
 }
 
+void simulation_shm_wrapper::running(bool value)
+{
+    if (value)
+    {
+        *(value_ptr + 27) = 0;
+    }
+    else
+    {
+        *(value_ptr + 27) = 1;
+    }
+}
+
+void simulation_shm_wrapper::read_sensor_inputs(sensor_data& sensor_input) const
+{
+    sensor_input.temp_sensor01 = read_temperature_sensor(1);
+    sensor_input.temp_sensor02 = read_temperature_sensor(2);
+    sensor_input.temp_sensor03 = read_temperature_sensor(3);
+    sensor_input.temp_sensor04 = read_temperature_sensor(4);
+    sensor_input.temp_sensor05 = read_temperature_sensor(5);
+    sensor_input.temp_sensor06 = read_temperature_sensor(6);
+    sensor_input.temp_sensor07 = read_temperature_sensor(7);
+    sensor_input.temp_sensor08 = read_temperature_sensor(8);
+    sensor_input.temp_sensor09 = read_temperature_sensor(9);
+    sensor_input.temp_sensor10 = read_temperature_sensor(10);
+
+    sensor_input.speed_of_conveyor = read_conveyor_speed_sensor();
+    sensor_input.qc_camera_fails = read_qc_camera_feed();
+
+}
+
+void simulation_shm_wrapper::set_control_data(control_data& ctrl_data)
+{
+    set_conveyor_target_speed(ctrl_data.speed_of_conveyor);
+    set_heaters(ctrl_data.heaters);
+    set_cooler(ctrl_data.cooler);
+    set_camera_status(ctrl_data.camera_toggle);
+}
+
+
 simulation_shm_wrapper::~simulation_shm_wrapper()
 {
-  
+    //Give signal to other process to quit
+    running(false);
+    
     if (destroy_memory_block())
     {
         std::cout << "Destroyed memory block\n";
