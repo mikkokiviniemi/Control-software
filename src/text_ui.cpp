@@ -7,8 +7,6 @@ std::mutex mtx;
 
 constexpr int NUMBER_OF_EMPTY_ROWS{ 15 };
 
-bool ui_is_alive(true);
-
 void print_empty_rows(int number_of_rows)
 {
     for (int i{ 0 }; i < number_of_rows; ++i)
@@ -60,40 +58,45 @@ void print_sensor_data(const json& sensor_data_json)
     std::cout << "heater_2: " << sensor_data_json["heater_2"] << '\n';
     std::cout << "heater_3: " << sensor_data_json["heater_3"] << '\n';
     std::cout << "cooler: " << sensor_data_json["cooler"] << '\n';
-    std::cout << std::fixed << std::setprecision(1);
-    //std::cout << "temperatures: " << sensor_data_json["temp_sensors"] << '\n';
-    std::cout << "temperatures: " << sensor_data_json["temp_sensors"][0] << ' ';
-    std::cout << sensor_data_json["temp_sensors"][1] << ' ';
-    std::cout << sensor_data_json["temp_sensors"][2] << ' ';
-    std::cout << sensor_data_json["temp_sensors"][3] << ' ';
-    std::cout << sensor_data_json["temp_sensors"][4] << '\n';
-    std::cout << "\t" << sensor_data_json["temp_sensors"][5] << ' ';
-    std::cout << sensor_data_json["temp_sensors"][6] << ' ';
-    std::cout << sensor_data_json["temp_sensors"][7] << ' ';
-    std::cout << sensor_data_json["temp_sensors"][8] << ' ';
-    std::cout << sensor_data_json["temp_sensors"][9] << '\n';
     std::cout << "qc_camera_status: " << sensor_data_json["qc_camera_status"] << '\n';
+    std::cout << "temperatures: "<< std::fixed << std::setprecision(1) << sensor_data_json["temp_sensors"][0] << ' ';
+    std::cout << std::fixed << std::setprecision(1) << sensor_data_json["temp_sensors"][1] << ' ';
+    std::cout << std::fixed << std::setprecision(1) << sensor_data_json["temp_sensors"][2] << ' ';
+    std::cout << std::fixed << std::setprecision(1) << sensor_data_json["temp_sensors"][3] << ' ';
+    std::cout << std::fixed << std::setprecision(1) << sensor_data_json["temp_sensors"][4] << '\n';
+    std::cout << std::fixed << std::setprecision(1) << "\t" << sensor_data_json["temp_sensors"][5] << ' ';
+    std::cout << std::fixed << std::setprecision(1) << sensor_data_json["temp_sensors"][6] << ' ';
+    std::cout << std::fixed << std::setprecision(1) << sensor_data_json["temp_sensors"][7] << ' ';
+    std::cout << std::fixed << std::setprecision(1) << sensor_data_json["temp_sensors"][8] << ' ';
+    std::cout << std::fixed << std::setprecision(1) << sensor_data_json["temp_sensors"][9] << '\n';
+    std::cout << "qc_camera_fails: " << sensor_data_json["qc_camera_fails"] << '\n';
     std::cout << "timestamp: " << sensor_data_json["time_stamp"] << "\n\n";
 }
 
-void print_camera_feed(const json& camera_feed)
+
+void print_control_data(const json& control_data_json)
 {
-    std::cout << "qc_camera_fails: " << camera_feed["qc_camera_fails"] << '\n';
-    std::cout << "timestamp: " << camera_feed["time_stamp"] << "\n\n";
+    std::cout << "Conveyor target speed: "  << control_data_json["speed_of_conveyor"] << '\n';
+    std::cout << "Heater1 on/off: "         << control_data_json["heater_1"] << '\n';
+    std::cout << "Heater2 on/off: "         << control_data_json["heater_2"] << '\n';
+    std::cout << "Heater3 on/off: "         << control_data_json["heater_3"] << '\n';
+    std::cout << "Cooler on/off: "          << control_data_json["cooler"] << '\n';
+    std::cout << "Camera on/off: "          << control_data_json["qc_camera_status"] << '\n';
+    std::cout << "Conveyor manual control: "<< control_data_json["conveyor_manual_control"] << '\n';
+    std::cout << "Heater1 manual control: " << control_data_json["heater1_manual_control"] << '\n';
+    std::cout << "Heater2 manual control: " << control_data_json["heater2_manual_control"] << '\n';
+    std::cout << "Heater3 manual control: " << control_data_json["heater3_manual_control"] << '\n';
+    std::cout << "Cooler manual control: "  << control_data_json["cooler_manual_control"] << "\n\n";
 }
+
 /*
  ON/OFF TOGGLE: 1 2 3 4 5 6 7
  MANUAL TOGGLE: Q W E R T Y
 */
-void control_data_input(json& output)
+bool control_data_input(json& output)
 {
-    while (ui_is_alive)
-    {
-
-        std::string choice;
-        std::getline(std::cin, choice);
-
-        std::scoped_lock scp_lck(mtx);
+    std::string choice;
+    std::getline(std::cin, choice);
 
         if (choice == "q") {
             output["heater1_manual_control"] = !output["heater1_manual_control"];
@@ -129,19 +132,27 @@ void control_data_input(json& output)
             output["qc_camera_status"] = !output["qc_camera_status"];
         }
         else if (choice == "6") {
-            uint8_t speed{ output["speed_of_conveyor"] };
-            output["speed_of_conveyor"] = ++speed;
+            
+            int speed{ output["speed_of_conveyor"] };
+            if (speed < 255)
+                ++speed;
+            output["speed_of_conveyor"] = speed;
         }
         else if (choice == "7") {
-            uint8_t speed{ output["speed_of_conveyor"] };
-            output["speed_of_conveyor"] = --speed;
+            int speed{ output["speed_of_conveyor"] };
+            if (speed > 0)
+            --speed;
+            output["speed_of_conveyor"] = speed;
         }
         else if (choice == "9") {
-            ui_is_alive = false;
-            return;
+            return false;
         }
-
-    }
+        else
+        {
+            return true;
+        }
+        
+    return true;
 }
 
 // //Simple text ui 
@@ -213,17 +224,10 @@ int main () {
         {"cooler", true },
         {"qc_camera_status", false},
         {"temp_sensors", {25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 25.0}},
-        {"time_stamp", "timestamp"}
-    }; 
-    print_sensor_data(sensor_data_json);
-    
-    // output to UI
-    json camera_feed_json
-    {
         {"qc_camera_fails", 0},
         {"time_stamp", "timestamp"}
-    };    // output to UI
-    print_camera_feed(camera_feed_json);
+    }; 
+    
     json control_data_json // input from UI
     {
     {"speed_of_conveyor", 0 },
@@ -239,19 +243,19 @@ int main () {
     {"cooler_manual_control", true}
     };
     
-     // input from UI
+    // input from UI
 
     MQTT_Client_UI ui_client(ADDRESS_UI, USER_ID_UI);
     ui_client.connect_broker();
     ui_client.subscribe(TOPIC_REC_SENSOR);
-    ui_client.subscribe(TOPIC_REC_CAMERA);
 
+    bool ui_is_alive(true);
+    
     while (ui_is_alive) {
         // RECEIVE SENSOR_DATA_JSON AND CAMERA_FEED_JSON;
         sensor_data_json = ui_client.sensor_data;
-        camera_feed_json = ui_client.camera_data;
         print_sensor_data(sensor_data_json);
-        print_camera_feed(camera_feed_json);
+        print_control_data(control_data_json);
         std::cout << "q)Toggle heater1 auto/manual\n";
         std::cout << "w)Toggle heater2 auto/manual\n";
         std::cout << "e)Toggle heater3 auto/manual\n";
@@ -268,11 +272,8 @@ int main () {
         std::cout << "9)Quit\n";
         print_empty_rows(10);
 
-        std::jthread input_thread(control_data_input, std::ref(control_data_json));
+        ui_is_alive = control_data_input(control_data_json);
 
-        
-
-        std::scoped_lock scp_lck(mtx);
         // SEND CONTROL_DATA_JSON
         ui_client.publish(TOPIC_SEND_CONTROL, control_data_json.dump());
     }

@@ -32,7 +32,6 @@ int main()
     sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0 };
         
     json sensor_data_json; // output to UI
-    json camera_feed_json; // output to UI
     json control_data_json // input from UI
     {
     {"speed_of_conveyor", 0 },
@@ -82,7 +81,6 @@ int main()
     mqtt_client.connect_broker();
     mqtt_client.subscribe(TOPIC_RECEIVE);
 
-    // mqtt_client.publish(TOPIC_RECEIVE, control_data_json.dump());
     // set timer
     std::chrono::time_point<std::chrono::system_clock> mqtt_timer = std::chrono::system_clock::now();
 
@@ -90,29 +88,27 @@ int main()
 
     int stop{ 0 };
 
-    while (stop == 0)
+    while (true)
     {
-        //Read sensor inputs from shared memory
+        // Read sensor inputs from shared memory
         shm.read_sensor_inputs(sensor_input);
 
+        // Add timestamp to sensor input data
         std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
         sensor_input.time_stamp = std::chrono::system_clock::to_time_t(now);
 
         // Send/receive rate to/from UI is set to one second
         if (now - mqtt_timer >= std::chrono::milliseconds(1000))
         {
-            //Tehdään (output jsonit jotka lähetetään UI:lle)
+            // Create output json to UI
             sensor_data_json = create_output_sensor_data(sensor_input, ctrl_data);
-            camera_feed_json = create_camera_feed_output(sensor_input);
 
-            /*send_data_json_MQTT()*/
+            // Publish data to UI
             mqtt_client.publish(TOPIC_SEND_SENSOR, sensor_data_json.dump());
-            mqtt_client.publish(TOPIC_SEND_CAMERA, camera_feed_json.dump());
             
             std::cout << "Sensor_data published:\n" << sensor_data_json << '\n';
-            std::cout << "Camera_feed published:\n" << camera_feed_json << '\n';
             
-            //Fetch MQTT control-data and store it in a json
+            // Fetch MQTT control-data and store it in a json
             control_data_json = mqtt_client.input_control_data;
             ctrl_data = json_to_control_data(control_data_json);
             mqtt_timer = now;
@@ -124,12 +120,12 @@ int main()
         // Send control data to simulation
         shm.set_control_data(ctrl_data);
 
-        std::cout << "Input 1 to exit, 0 to continue: ";
-        std::cin >> stop;
+        // std::cout << "Input 1 to exit, 0 to continue: ";
+        // std::cin >> stop;
 
-        std::this_thread::sleep_for(std::chrono::milliseconds(500));
+        // std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
-        // Send control data to simulation
+        
 
     }
 
@@ -165,13 +161,3 @@ int main()
 
     return 0;
 }
-
-
-/*
-Saadaan sensor data
-Lähetetään sensor data
-Saadaan json data
-Tehdään automaatio
-lähetetään control data
-
-*/

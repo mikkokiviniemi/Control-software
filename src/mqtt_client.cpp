@@ -50,9 +50,10 @@ void MQTT_Client::subscribe(const std::string& topic){
 }
 
 void MQTT_Client::message_arrived(mqtt::const_message_ptr msg) {
-    // std::string topic = msg->get_topic();
-
-    input_control_data = json::parse(msg->get_payload_str()); 
+    std::string topic = msg->get_topic();
+    if (topic == TOPIC_RECEIVE) {
+        input_control_data = json::parse(msg->get_payload_str());
+    }
 }
 
 // a function that the callback uses

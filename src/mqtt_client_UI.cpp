@@ -52,12 +52,10 @@ void MQTT_Client_UI::subscribe(const std::string& topic){
 void MQTT_Client_UI::message_arrived(mqtt::const_message_ptr msg) {
     std::string topic = msg->get_topic();
 
-    if (topic == TOPIC_REC_SENSOR) { // only text-UI receives 
+    if (topic == TOPIC_REC_SENSOR) {
         sensor_data = json::parse(msg->get_payload_str());
     }
-    if (topic == TOPIC_REC_CAMERA) { // only text-UI receives
-        camera_data = json::parse(msg->get_payload_str());
-    }
+
 }
 
 // a function that the callback uses
