@@ -17,6 +17,7 @@ control_data ctrl_data{};
 std::mutex mtx; 
 
 
+
 int main()
 {
     //FOR AUTOMATION
@@ -24,6 +25,7 @@ int main()
     auto start_time = std::chrono::system_clock::now();
     auto heater_timing = std::chrono::system_clock::now();
     bool heater_period = true;
+    bool start_period = true;
 
     uint16_t failed_sensor_input_validation{ 0 };
     uint8_t failed_control_input_validation{ 0 };
@@ -61,17 +63,18 @@ int main()
 
     std::thread automation_thread([&]() {
         while (is_running) {
-            if (std::chrono::system_clock::now() - start_time > std::chrono::seconds(18)) {
-                if (std::chrono::system_clock::now() - heater_timing > std::chrono::seconds(10) && heater_period) { 
+            if (std::chrono::system_clock::now() - start_time > std::chrono::seconds(20)) {
+                start_period = false;
+                if (std::chrono::system_clock::now() - heater_timing > std::chrono::seconds(5) && heater_period) { 
                     heater_period = false;
                     heater_timing = std::chrono::system_clock::now();
                 }
-                if (std::chrono::system_clock::now() - heater_timing > std::chrono::seconds(20) && !heater_period) { 
+                if (std::chrono::system_clock::now() - heater_timing > std::chrono::seconds(10) && !heater_period) { 
                     heater_period = true;
                     heater_timing = std::chrono::system_clock::now();
                 }
             }
-            automatic_loop(sensor_input,ctrl_data,output,heater_period);
+            automatic_loop(sensor_input,ctrl_data,output,heater_period,start_period);
             std::this_thread::sleep_for(std::chrono::milliseconds(500));
         }
     });

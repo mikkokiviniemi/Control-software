@@ -76,13 +76,13 @@ uint8_t cooling_control(const sensor_data &data)
 }
 
 //Loop block for automation
-void automatic_loop(const sensor_data &sens_data, control_data& ctrl_data, const json& control_json, const bool& heater_period)
+void automatic_loop(const sensor_data &sens_data, control_data& ctrl_data, const json& control_json, const bool& heater_period, const bool& start_period)
 {
     
-    bool failure_mode = (sens_data.qc_camera_fails != 0); //IF no camera fails -> failure_mode = false
+    bool failure_mode = false; //IF no camera fails -> failure_mode = false
     
     if (!control_json["conveyor_manual_control"]) { // Check if manual control is on
-        if (failure_mode) { //If failure mode on
+        if (failure_mode || start_period) { //If failure mode or start_period on
             ctrl_data.speed_of_conveyor = 0;
         } else {
             ctrl_data.speed_of_conveyor = conveyor_control(sens_data);
@@ -117,3 +117,26 @@ void automatic_loop(const sensor_data &sens_data, control_data& ctrl_data, const
         }
     }
 }
+//IN MAIN FILE
+/*
+    //FOR AUTOMATION
+    auto start_time = std::chrono::system_clock::now();
+    auto heater_timing = std::chrono::system_clock::now();
+    bool heater_period = true;
+    bool start_period = true;
+*/
+/*
+if (std::chrono::system_clock::now() - start_time > std::chrono::seconds(20)) {
+    start_period = false;
+    if (std::chrono::system_clock::now() - heater_timing > std::chrono::seconds(5) && heater_period) { 
+        heater_period = false;
+        heater_timing = std::chrono::system_clock::now();
+    }
+    if (std::chrono::system_clock::now() - heater_timing > std::chrono::seconds(10) && !heater_period) { 
+        heater_period = true;
+        heater_timing = std::chrono::system_clock::now();
+    }
+}
+automatic_loop(sensor_input,ctrl_data,output,heater_period,start_period);
+std::this_thread::sleep_for(std::chrono::milliseconds(500));
+*/
