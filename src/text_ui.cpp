@@ -230,17 +230,17 @@ int main () {
     
     json control_data_json // input from UI
     {
-    {"speed_of_conveyor", 0 },
-    {"heater_1", false },
-    {"heater_2", false },
-    {"heater_3", false },
-    {"cooler", false },
-    {"qc_camera_status", false },
     {"conveyor_manual_control", true},
+    {"cooler", false },
+    {"cooler_manual_control", true},
+    {"heater_1", false },
     {"heater1_manual_control", true},
+    {"heater_2", false },
     {"heater2_manual_control", true},
+    {"heater_3", false },
     {"heater3_manual_control", true},
-    {"cooler_manual_control", true}
+    {"speed_of_conveyor", 0 },
+    {"qc_camera_status", false }
     };
     
     // input from UI

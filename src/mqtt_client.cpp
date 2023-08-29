@@ -31,7 +31,7 @@ void MQTT_Client::disconnect_broker() {
 
 void MQTT_Client::publish(const std::string& topic, const std::string& payload){
     mqtt::message_ptr msg = mqtt::make_message(topic, payload);
-    msg->set_qos(0);
+    msg->set_qos(1);
 
     try {
         client.publish(msg)->wait();
@@ -42,7 +42,7 @@ void MQTT_Client::publish(const std::string& topic, const std::string& payload){
 
 void MQTT_Client::subscribe(const std::string& topic){
     try {
-        client.subscribe(topic, 0)->wait();
+        client.subscribe(topic, 1)->wait();
         std::cout << "subscribed to topic " << topic << '\n';
     } catch (const mqtt::exception& e){
         std::cerr << "Error: " << e.what() << '\n';
@@ -52,6 +52,7 @@ void MQTT_Client::subscribe(const std::string& topic){
 void MQTT_Client::message_arrived(mqtt::const_message_ptr msg) {
     std::string topic = msg->get_topic();
     if (topic == TOPIC_RECEIVE) {
+        std::cout << "message from UI: " << msg->get_payload_str() << '\n';
         input_control_data = json::parse(msg->get_payload_str());
     }
 }
