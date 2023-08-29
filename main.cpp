@@ -16,8 +16,14 @@
 #include <thread>
 #include <mutex>
 
+
 int main()
 {
+    //FOR AUTOMATION
+    auto start_time = std::chrono::system_clock::now();
+    auto heater_timing = std::chrono::system_clock::now();
+    bool heater_period = true;
+    bool start_period = true;
 
  //   simulation_shm_wrapper sensor_data_input{ std::string{"shm_file"} };
     simulation_shm_wrapper shm{ std::string{"simulation_shm"} };
@@ -115,13 +121,23 @@ int main()
         }
         
         // Automatic loop changes the control data
-        automatic_loop(sensor_input, ctrl_data, control_data_json);
+
+      if (std::chrono::system_clock::now() - start_time > std::chrono::seconds(20)) {
+            start_period = false;
+            if (std::chrono::system_clock::now() - heater_timing > std::chrono::seconds(5) && heater_period) { 
+                heater_period = false;
+                heater_timing = std::chrono::system_clock::now();
+            }
+            if (std::chrono::system_clock::now() - heater_timing > std::chrono::seconds(10) && !heater_period) { 
+                heater_period = true;
+                heater_timing = std::chrono::system_clock::now();
+            }
+        }
+        automatic_loop(sensor_input,ctrl_data,output,heater_period,start_period);
+        std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
         // Send control data to simulation
         shm.set_control_data(ctrl_data);
-
-        // std::cout << "Input 1 to exit, 0 to continue: ";
-        // std::cin >> stop;
 
         // std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
