@@ -83,8 +83,8 @@ uint8_t cooling_control(const sensor_data &data)
 void automatic_loop(const sensor_data &sens_data, control_data& ctrl_data, const json& control_json)
 {
     
-    bool failure_mode = (sens_data.qc_camera_fails != 0); //IF no camera fails -> failure_mode = false
-    
+    //bool failure_mode = (sens_data.qc_camera_fails != 0); //IF no camera fails -> failure_mode = false
+    bool failure_mode{ false };
     if (!control_json["conveyor_manual_control"]) {
         if (failure_mode) {
             ctrl_data.speed_of_conveyor = 0;

@@ -7,7 +7,7 @@
 using json = nlohmann::json;
 
 json create_output_sensor_data(const sensor_data& sensor_input, const control_data& ctrl_data);
-json create_camera_feed_output(const sensor_data& sensor_input);
+//json create_camera_feed_output(const sensor_data& sensor_input);
 
 control_data json_to_control_data(const json& json_elem);
 

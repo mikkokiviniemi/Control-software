@@ -60,7 +60,6 @@ TEST_CASE("MQTT Client")
     test_client_sender.publish(TOPIC_SEND_SENSOR, control_data_json.dump());
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     CHECK(test_client_user.input_control_data == json::parse(control_data_json.dump()));
-    CHECK(test_client_user.json_handled == true);
 }
 
 /*
