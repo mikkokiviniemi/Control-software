@@ -133,7 +133,7 @@ int main()
                 heater_timing = std::chrono::system_clock::now();
             }
         }
-        automatic_loop(sensor_input,ctrl_data,output,heater_period,start_period);
+        automatic_loop(sensor_input,ctrl_data,control_data_json,heater_period,start_period);
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
         // Send control data to simulation
