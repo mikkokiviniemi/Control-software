@@ -155,64 +155,6 @@ bool control_data_input(json& output)
     return true;
 }
 
-// //Simple text ui 
-// void json_ui (json& output, const json& input, const json& input_2) {
-    
-//     while(true) {
-//         std::cout << "[help,manual,soc,hc,camera,display,apply] ";
-//         std::string choice;
-//         std::string manual;
-//         std::cout << ">";
-//         std::getline(std::cin,choice);
-
-//         if (choice == "help") {
-//             display_help();
-//         }
-//         else if (choice == "manual") {
-//             std::cout << ">";
-//             std::getline(std::cin,manual);
-//             if (manual == "true") {
-//                 output["heater1_manual_control"] = true;
-//                 output["heater2_manual_control"] = true;
-//                 output["heater3_manual_control"] = true;
-//                 output["cooler_manual_control"] = true;
-//                 output["conveyor_manual_control"] = true;
-//             } else if (manual == "false") {
-//                 output["heater1_manual_control"] = false;
-//                 output["heater2_manual_control"] = false;
-//                 output["heater3_manual_control"] = false;
-//                 output["cooler_manual_control"] = false;
-//                 output["conveyor_manual_control"] = false;
-//             }
-//         }
-//         else if (choice == "soc") {
-//             output["speed_of_conveyor"] = soc_ui();
-//         }
-//         else if (choice == "hc") {
-//             output["heater_1"] = hc_ui("heater_1");
-//             output["heater_2"] = hc_ui("heater_2");
-//             output["heater_3"] = hc_ui("heater_3");
-//             output["cooler"] = hc_ui("cooler");
-//         }
-//         else if (choice == "camera") {
-//             output["qc_camera_status"] = camera_ui();
-//         }
-//         else if (choice == "display") {
-//             std::cout << input.dump(4) << "\n";
-//             std::cout << input_2.dump(4) << "\n";
-//             std::cout << output.dump(4) << "\n";
-//         }
-//         else if (choice == "apply") {
-//             std::cout << "Changes applied!\n";
-//             break;
-//         }
-//         else {
-//             std::cout << "Invalid command!\n";
-//         }
-//     }
-// }
-
-
 //Main function
 int main () {
     json sensor_data_json

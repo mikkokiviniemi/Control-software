@@ -8,9 +8,6 @@
 
 using json = nlohmann::json;
 
-/* void json_ui(json &output, const json &input, const json &input_2); */
-
-
 int main ();
 
 #endif

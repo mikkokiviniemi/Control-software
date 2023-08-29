@@ -122,7 +122,7 @@ int main()
         
         // Automatic loop changes the control data
 
-      if (std::chrono::system_clock::now() - start_time > std::chrono::seconds(20)) {
+        if (std::chrono::system_clock::now() - start_time > std::chrono::seconds(20)) {
             start_period = false;
             if (std::chrono::system_clock::now() - heater_timing > std::chrono::seconds(5) && heater_period) { 
                 heater_period = false;
