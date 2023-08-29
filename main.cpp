@@ -45,11 +45,11 @@ int main()
     {"heater_2", false },
     {"heater_3", false },
     {"cooler", false },
-    {"qc_camera_status", false },
+    {"qc_camera_toggle", false },
     {"conveyor_manual_control", true},
-    {"heater1_manual_control", true},
-    {"heater2_manual_control", true},
-    {"heater3_manual_control", true},
+    {"heater_1_manual_control", true},
+    {"heater_2_manual_control", true},
+    {"heater_3_manual_control", true},
     {"cooler_manual_control", true}
     };
     

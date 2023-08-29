@@ -58,7 +58,7 @@ void print_sensor_data(const json& sensor_data_json)
     std::cout << "heater_2: " << sensor_data_json["heater_2"] << '\n';
     std::cout << "heater_3: " << sensor_data_json["heater_3"] << '\n';
     std::cout << "cooler: " << sensor_data_json["cooler"] << '\n';
-    std::cout << "qc_camera_status: " << sensor_data_json["qc_camera_status"] << '\n';
+    std::cout << "qc_camera_toggle: " << sensor_data_json["qc_camera_toggle"] << '\n';
     std::cout << "temperatures: "<< std::fixed << std::setprecision(1) << sensor_data_json["temp_sensors"][0] << ' ';
     std::cout << std::fixed << std::setprecision(1) << sensor_data_json["temp_sensors"][1] << ' ';
     std::cout << std::fixed << std::setprecision(1) << sensor_data_json["temp_sensors"][2] << ' ';
@@ -81,11 +81,11 @@ void print_control_data(const json& control_data_json)
     std::cout << "Heater2 on/off: "         << control_data_json["heater_2"] << '\n';
     std::cout << "Heater3 on/off: "         << control_data_json["heater_3"] << '\n';
     std::cout << "Cooler on/off: "          << control_data_json["cooler"] << '\n';
-    std::cout << "Camera on/off: "          << control_data_json["qc_camera_status"] << '\n';
+    std::cout << "Camera on/off: "          << control_data_json["qc_camera_toggle"] << '\n';
     std::cout << "Conveyor manual control: "<< control_data_json["conveyor_manual_control"] << '\n';
-    std::cout << "Heater1 manual control: " << control_data_json["heater1_manual_control"] << '\n';
-    std::cout << "Heater2 manual control: " << control_data_json["heater2_manual_control"] << '\n';
-    std::cout << "Heater3 manual control: " << control_data_json["heater3_manual_control"] << '\n';
+    std::cout << "Heater1 manual control: " << control_data_json["heater_1_manual_control"] << '\n';
+    std::cout << "Heater2 manual control: " << control_data_json["heater_2_manual_control"] << '\n';
+    std::cout << "Heater3 manual control: " << control_data_json["heater_3_manual_control"] << '\n';
     std::cout << "Cooler manual control: "  << control_data_json["cooler_manual_control"] << "\n\n";
 }
 
@@ -129,7 +129,7 @@ bool control_data_input(json& output)
             output["cooler"] = !output["cooler"];
         }
         else if (choice == "5") {
-            output["qc_camera_status"] = !output["qc_camera_status"];
+            output["qc_camera_toggle"] = !output["qc_camera_toggle"];
         }
         else if (choice == "6") {
             
@@ -222,7 +222,7 @@ int main () {
         {"heater_2", false},
         {"heater_3", false},
         {"cooler", true },
-        {"qc_camera_status", false},
+        {"qc_camera_toggle", false},
         {"temp_sensors", {25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 25.0}},
         {"qc_camera_fails", 0},
         {"time_stamp", "timestamp"}
@@ -240,7 +240,7 @@ int main () {
     {"heater_3", false },
     {"heater3_manual_control", true},
     {"speed_of_conveyor", 0 },
-    {"qc_camera_status", false }
+    {"qc_camera_toggle", false }
     };
     
     // input from UI
