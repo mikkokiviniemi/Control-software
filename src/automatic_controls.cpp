@@ -1,7 +1,5 @@
 #include "automatic_controls.hpp"
-#include <iostream>
-#include <bitset>
-#include <chrono>
+
 //Calculates highest temperature from sensor data
 int16_t highest_temp(const sensor_data& data) {
     int16_t highest_temp = data.temp_sensor01;
@@ -18,6 +16,7 @@ int16_t highest_temp(const sensor_data& data) {
     }
     return highest_temp;
 }
+
 //Calculates mean temperature from sensor data
 int16_t mean_temp (const sensor_data& data) {
     int16_t addition = 
@@ -33,9 +32,6 @@ int16_t mean_temp (const sensor_data& data) {
     data.temp_sensor10;
     return addition/10;
 }
-// max_temp (use for checking)
-
-//vikatila
 
 //Automatic control block for conveyor speed control. Takes values from sensor_data and makes changes to conveyor speed.
 uint8_t conveyor_control(const sensor_data &data)
@@ -48,6 +44,7 @@ uint8_t conveyor_control(const sensor_data &data)
     }
     return soc;
 }
+
 //Toggle heater
 void toggle_heater(uint8_t& heaters, const uint8_t heater, bool state) {
     if (state) {
@@ -56,6 +53,7 @@ void toggle_heater(uint8_t& heaters, const uint8_t heater, bool state) {
         heaters &= ~heater; // Set the bit to 0
     }
 }
+
 //Automatic control block for heating control. Takes values from sensor_data and makes changes to heating.
 uint8_t heating_control(const sensor_data &data, uint8_t heater)
 {
@@ -67,6 +65,7 @@ uint8_t heating_control(const sensor_data &data, uint8_t heater)
     }
     return heaters;
 }
+
 //Automatic control block for cooling control. Takes values from sensor_data and makes changes to cooling.
 uint8_t cooling_control(const sensor_data &data)
 {
