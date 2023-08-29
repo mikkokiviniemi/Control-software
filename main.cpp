@@ -1,3 +1,5 @@
+#define NDEBUG
+
 #include "data_structures.hpp"
 #include "text_ui.hpp"
 #include "json_output.hpp"
@@ -96,6 +98,9 @@ int main()
 
     while (true)
     {
+        try
+        {
+            
         // Read sensor inputs from shared memory
         shm.read_sensor_inputs(sensor_input);
 
@@ -138,6 +143,16 @@ int main()
 
         // Send control data to simulation
         shm.set_control_data(ctrl_data);
+        }
+        catch(const json::exception& e)
+        {
+            std::cerr << "JSON error: " << e.what() << '\n';
+        }    
+        catch (const std::exception& e)
+        {
+            std::cerr << e.what() << '\n';
+        }
+        
 
         // std::this_thread::sleep_for(std::chrono::milliseconds(500));
 

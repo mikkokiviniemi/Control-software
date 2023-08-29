@@ -91,21 +91,21 @@ void automatic_loop(const sensor_data &sens_data, control_data& ctrl_data, const
             ctrl_data.speed_of_conveyor = conveyor_control(sens_data);
         }
     }
-    if (!control_json["heater1_manual_control"]) { // Check if manual control is on
+    if (!control_json["heater_1_manual_control"]) { // Check if manual control is on
         if (failure_mode || !heater_period) { //If failure mode on or not heater_period
             toggle_heater(ctrl_data.heaters,HEATER_1,false);
         } else {
             ctrl_data.heaters = heating_control(sens_data,HEATER_1);
         }
     }
-    if (!control_json["heater2_manual_control"]) { // Check if manual control is on
+    if (!control_json["heater_2_manual_control"]) { // Check if manual control is on
         if (failure_mode || !heater_period) { //If failure mode on or not heater_period
             toggle_heater(ctrl_data.heaters,HEATER_2,false);
         } else {
             ctrl_data.heaters = heating_control(sens_data,HEATER_2);
         }
     }
-    if (!control_json["heater3_manual_control"]) { // Check if manual control is on
+    if (!control_json["heater_3_manual_control"]) { // Check if manual control is on
         if (failure_mode || !heater_period) { //If failure mode on or not heater_period
             toggle_heater(ctrl_data.heaters,HEATER_3,false);
         } else {

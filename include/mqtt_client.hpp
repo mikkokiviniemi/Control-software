@@ -1,6 +1,8 @@
 #ifndef MQTT_CLIENT_HPP
 #define MQTT_CLIENT_HPP
 
+#define NDEBUG
+
 #include "mqtt/async_client.h"
 #include "json.hpp"
 #include <string>
