@@ -52,10 +52,12 @@ void MQTT_Client_Log::message_arrived(mqtt::const_message_ptr msg) {
     std::string topic = msg->get_topic();
 
     if (topic == TOPIC_LOG_SENSOR) {
+        std::cout << "Sensor data received:\n"; 
         print_sensor_log(json::parse(msg->get_payload_str()));
     }
 
     if (topic == TOPIC_LOG_CONTROL) {
+        std::cout << "Control data received:\n";
         print_control_log(json::parse(msg->get_payload_str()));
     }
 }
