@@ -30,8 +30,6 @@ constexpr auto HEATERS_OFF_PERIOD = std::chrono::seconds(10);
 
 int16_t highest_temp(const sensor_data &data);
 
-int16_t mean_temp(const sensor_data &data);
-
 uint8_t conveyor_control(const sensor_data& data);
 
 uint8_t heating_control(const sensor_data &data, uint8_t heater);

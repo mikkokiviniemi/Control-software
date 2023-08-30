@@ -1,6 +1,3 @@
-add_executable(dummy_data dummy_data.cpp)
-target_include_directories(dummy_data PUBLIC ${CMAKE_SOURCE_DIR}/include)
-
 add_executable(log log.cpp)
 target_include_directories(log PUBLIC ${CMAKE_SOURCE_DIR}/include ${CMAKE_SOURCE_DIR}/external)
 target_link_libraries(log paho-mqtt3a paho-mqttpp3)

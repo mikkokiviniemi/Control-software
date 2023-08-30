@@ -13,7 +13,6 @@
 
 TEST_CASE("Data validation")
 {
-
     sensor_data sensor_input{ 0, 0, 1250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0};
     control_data ctrl_data{150, 0b111, 1, 1 };
     
@@ -22,7 +21,6 @@ TEST_CASE("Data validation")
 
     CHECK((failed_sensor_input_validation & FAILED_TEMP_SENSOR01));
     CHECK(failed_control_input_validation == 0);
-
 }
 
 TEST_CASE("Json")
@@ -54,8 +52,8 @@ TEST_CASE("MQTT Client")
 
     const std::string ADDRESS = "tcp://test.mosquitto.org:1883";
     const std::string TEST_ID_1 = "control_sw_1";
-    const std::string TEST_ID_2 = "user";
-    const std::string TOPIC_SEND_SENSOR = "sensor_control_data";
+    const std::string TEST_ID_2 = "user_sw";
+    const std::string TOPIC_SEND_SENSOR = "test_sw_topic";
 
     MQTT_Client test_client_sender (ADDRESS, TEST_ID_1);
     MQTT_Client test_client_user (ADDRESS, TEST_ID_2);

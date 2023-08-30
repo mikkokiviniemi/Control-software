@@ -1,11 +1,5 @@
 #include "text_ui.hpp"
 #include <iostream>
-#include <thread>
-#include <mutex>
-
-std::mutex mtx;
-
-constexpr int NUMBER_OF_EMPTY_ROWS{ 15 };
 
 void print_empty_rows(int number_of_rows)
 {
@@ -14,42 +8,6 @@ void print_empty_rows(int number_of_rows)
         std::cout << '\n';
     }
 }
-
-// //Display help for commands
-// void display_help () {
-//     std::cout << "Commands:\n";
-//     std::cout 
-//     << "soc : speed of conveyor\n"
-//     << "display : display values\n"
-//     << "hc : heater/cooler toggle\n"
-//     << "camera : camera toggle\n"
-//     << "apply : apply changes\n";
-// }
-// //Simple ui for speed of conveyor input return uint8_t
-// uint8_t soc_ui (){
-//     std::string input;
-//     std::cout << "Input for new speed (0-255): ";
-//     std::getline(std::cin,input);
-
-//     uint8_t new_speed = static_cast<uint8_t>(std::stoi(input));
-//     return new_speed;
-// }
-// //Simple ui for heater and cooler input return uint8_t
-// bool hc_ui (std::string name){
-//     std::string input;
-//     std::cout << "Input for new " << name << " value (1,0): ";
-//     std::getline(std::cin,input);
-//     int value = std::stoi(input);
-//     return value;
-// }
-// //Simple ui for camera_toggle input return uint8_t
-// bool camera_ui (){
-//     std::string input;
-//     std::cout << "Input for camera toggle (1,0): ";
-//     std::getline(std::cin,input);
-//     int camera_toggle = std::stoi(input);
-//     return camera_toggle;
-// }
 
 void print_sensor_data(const json& sensor_data_json)
 {
@@ -71,7 +29,6 @@ void print_sensor_data(const json& sensor_data_json)
     std::cout << "qc_camera_fails: " << sensor_data_json["qc_camera_fails"] << '\n';
     std::cout << "timestamp: " << sensor_data_json["time_stamp"] << "\n\n";
 }
-
 
 void print_control_data(const json& control_data_json)
 {

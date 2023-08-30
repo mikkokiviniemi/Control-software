@@ -24,7 +24,6 @@ int count_qc_fails(uint16_t qc_camera_fails)
     return count;
 }
 
-
 bool check_bitmask(uint8_t bitmask, uint8_t flag)
 {
     return (bitmask & flag);
@@ -56,18 +55,6 @@ json create_output_sensor_data(const sensor_data& sensor_input, const control_da
     };
     return output_data;
 }
-
-// json create_camera_feed_output(const sensor_data& sensor_input) {
-//     std::stringstream time;
-//     time << std::put_time(std::localtime(&sensor_input.time_stamp), "%FT%TGMT+2");
-    
-//     json camera_feed_output = {
-//     {"qc_camera_fails", sensor_input.qc_camera_fails},
-//     {"time_stamp", time.str()}
-//     };
-//     return camera_feed_output;
-// }
-
 
 //Convert Json to control_data
 control_data json_to_control_data(const json& json_elem) {
