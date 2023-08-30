@@ -35,7 +35,7 @@ json create_output_sensor_data(const sensor_data& sensor_input, const control_da
     {"heater_2", check_bitmask(ctrl_data.heaters, HEATER_2)},
     {"heater_3", check_bitmask(ctrl_data.heaters, HEATER_3)},
     {"cooler", (ctrl_data.cooler == 1)},
-    {"qc_camera_status", check_bitmask(ctrl_data.camera_toggle, 1)},
+    {"qc_camera_toggle", check_bitmask(ctrl_data.camera_toggle, 1)},
     {"temp_sensors", {
         static_cast<float>(sensor_input.temp_sensor01) / 10.0f, 
         static_cast<float>(sensor_input.temp_sensor02) / 10.0f,
@@ -76,6 +76,6 @@ control_data json_to_control_data(const json& json_elem) {
     bool cooler = json_elem["cooler"];
     new_data.heaters =  (heater_1 << 0) | (heater_2 << 1) | (heater_3 << 2);
     new_data.cooler = cooler << 0;
-    new_data.camera_toggle = json_elem["qc_camera_status"];
+    new_data.camera_toggle = json_elem["qc_camera_toggle"];
     return new_data;
 }
