@@ -8,6 +8,7 @@
 
 #include "mqtt_client.hpp"
 #include "mqtt/async_client.h"
+#include <cstdint>
 
 
 TEST_CASE("Data validation")
@@ -71,8 +72,29 @@ TEST_CASE("MQTT Client")
 
 TEST_CASE("Automatic control")
 {
-    sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0};
-    CHECK(highest_temp(sensor_input) == 25);
-    CHECK(conveyor_control(sensor_input) == OPTIMAL_SOC);
-    CHECK(cooling_control(sensor_input) == 0);
+    SUBCASE("Temperature low") {
+        sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0};
+        CHECK(highest_temp(sensor_input) == 250);
+        uint8_t test_heaters;
+        test_heaters = heating_control(sensor_input, HEATER_1);
+        test_heaters = heating_control(sensor_input, HEATER_2);
+        test_heaters = heating_control(sensor_input, HEATER_3);
+        CHECK(test_heaters == 0b00000111);
+        CHECK(conveyor_control(sensor_input) == OPTIMAL_SOC);
+        CHECK(cooling_control(sensor_input) == 0);
+    }
+
+
+    SUBCASE("Temperature > 80") {
+        sensor_data sensor_input2{ 0, 0, 800, 810, 810, 810, 810, 810, 810, 800, 810, 810, 0};
+        CHECK(highest_temp(sensor_input2) == 810);
+        uint8_t test_heaters2;
+        test_heaters2 = heating_control(sensor_input2, HEATER_1);
+        test_heaters2 = heating_control(sensor_input2, HEATER_2);
+        test_heaters2 = heating_control(sensor_input2, HEATER_3);
+        CHECK(test_heaters2 == 0b00000000);
+        CHECK(conveyor_control(sensor_input2) == 0);
+        CHECK(cooling_control(sensor_input2) == 1);
+    }
+
 }
