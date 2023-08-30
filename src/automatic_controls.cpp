@@ -124,13 +124,13 @@ void automatic_loop(const sensor_data &sens_data, control_data& ctrl_data, const
 void heater_period_timing(std::chrono::_V2::system_clock::time_point& start_time, 
                    std::chrono::_V2::system_clock::time_point& heater_timing, 
                    bool& heater_period, bool& start_period) {
-    if (std::chrono::system_clock::now() - start_time > std::chrono::seconds(20)) {
+    if (std::chrono::system_clock::now() - start_time > STARTING_PERIOD_TIME) {
         start_period = false;
-        if (std::chrono::system_clock::now() - heater_timing > std::chrono::seconds(5) && heater_period) { 
+        if (std::chrono::system_clock::now() - heater_timing > HEATERS_ON_PERIOD && heater_period) { 
             heater_period = false;
             heater_timing = std::chrono::system_clock::now();
         }
-        if (std::chrono::system_clock::now() - heater_timing > std::chrono::seconds(10) && !heater_period) { 
+        if (std::chrono::system_clock::now() - heater_timing > HEATERS_OFF_PERIOD && !heater_period) { 
             heater_period = true;
             heater_timing = std::chrono::system_clock::now();
         }

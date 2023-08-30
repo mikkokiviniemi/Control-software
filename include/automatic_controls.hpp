@@ -11,7 +11,10 @@ using json = nlohmann::json;
 
 constexpr int16_t MAX_TEMP = 800;
 constexpr int16_t COOLING_TEMP = 400;
-constexpr uint8_t OPTIMAL_SOC = 230;
+constexpr uint8_t OPTIMAL_SOC = 229;
+constexpr auto STARTING_PERIOD_TIME = std::chrono::seconds(20);
+constexpr auto HEATERS_ON_PERIOD = std::chrono::seconds(5);
+constexpr auto HEATERS_OFF_PERIOD = std::chrono::seconds(10);
 
 //IN MAIN FILE
 /*
