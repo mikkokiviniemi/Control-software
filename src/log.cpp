@@ -97,6 +97,7 @@ void print_sensor_log(const json& sensor_data_json)
     std::cout << sensor9 << ' ';
     std::cout << sensor10 << '\n';
     std::cout << "qc_camera_fails:\t" << sensor_data_json["qc_camera_fails"] << '\n';
+    std::cout << "failures:\t\t" << sensor_data_json["failures"] << '\n';
     std::cout << "timestamp:\t\t" << sensor_data_json["time_stamp"] << '\n' << std::endl;
 }
 

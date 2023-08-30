@@ -51,7 +51,8 @@ json create_output_sensor_data(const sensor_data& sensor_input, const control_da
         temperature_raw_to_ui(sensor_input.temp_sensor10)
         }},
     {"qc_camera_fails", count_qc_fails(sensor_input.qc_camera_fails)},
-    {"time_stamp", time.str()}
+    {"time_stamp", time.str()},
+    {"failures", ""}    
     };
     return output_data;
 }

@@ -22,3 +22,8 @@ target_include_directories(shared_memory_wrapper PUBLIC ${CMAKE_SOURCE_DIR}/incl
 add_executable(text_ui text_ui.cpp)
 target_include_directories(text_ui PUBLIC ${CMAKE_SOURCE_DIR}/include)
 target_link_libraries(text_ui mqtt_client_UI)
+
+
+add_library(failure_detection failure_detection.cpp)
+target_include_directories(failure_detection PUBLIC ${CMAKE_SOURCE_DIR}/include)
+
