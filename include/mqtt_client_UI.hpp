@@ -8,7 +8,7 @@
 // constexpr std::string ADDRESS = "5.tcp.eu.ngrok.io:18017";
 const std::string ADDRESS_UI = "tcp://test.mosquitto.org:1883";
 const std::string USER_ID_UI{ "control_sw_ui" }; // text UI uses this
-const std::string TOPIC_REC_SENSOR = "sensor_control_data";
+const std::string TOPIC_REC_SENSOR = "sensor_control_data1";
 // const std::string TOPIC_RECEIVE = "conveyor_params"; // from UI
 const std::string TOPIC_SEND_CONTROL = "conveyor_params"; // from UI
 
