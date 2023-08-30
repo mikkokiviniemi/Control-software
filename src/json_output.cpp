@@ -96,7 +96,7 @@ uint8_t conveyor_speed_ui_to_raw(int conveyor_speed)
     return static_cast<uint8_t>(round(conveyor_speed * UI_TO_RAW));
 }
 
-//take raw temperature, convert to float and round down to two decimal places
+//take raw temperature, convert to float and round down to one decimal place
 float temperature_raw_to_ui(int16_t temperature)
 {
     return (static_cast<float>(temperature) * 10) / 100;
