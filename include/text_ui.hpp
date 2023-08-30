@@ -8,6 +8,9 @@
 
 using json = nlohmann::json;
 
+void print_control_data(const json& control_data_json);
+void print_sensor_data(const json& sensor_data_json);
+
 int main ();
 
 #endif
