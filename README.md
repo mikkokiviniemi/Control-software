@@ -5,15 +5,15 @@ The goal was to run the production line without breaking the hardware and optimi
 We use shared memory to communicate with the simulated hardware and MQTT to communicate with the UI.
 
 ## Content
-  - [Technologies ⚙️](1#L17)
-  - [Build and Prerequisites 🛠️](1#L27)
+  - [Technologies ⚙️](README.md#L17)
+  - [Build and Prerequisites 🛠️](README.md#L27)
     * Install prerequisites for Paho
     * Build and install Paho C library using cmake (anywhere on computer)
     * Build and install Paho C++ library using cmake (anywhere on computer)
-  - [Run Locally ▶️](1#L67)
+  - [Run Locally ▶️](README.md#L67)
     * [Clone the project]
     * [Run]
-  - [Contributors 👥](1#L81)
+  - [Contributors 👥](README.md#L81)
 ## Technologies ⚙️
 - Control software is written in C++
 - The program receives data from the conveyor via shared memory, which is used in automation and sent to the UI
