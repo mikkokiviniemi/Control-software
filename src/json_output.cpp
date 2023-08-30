@@ -41,16 +41,16 @@ json create_output_sensor_data(const sensor_data& sensor_input, const control_da
     {"cooler", (ctrl_data.cooler == 1)},
     {"qc_camera_toggle", check_bitmask(ctrl_data.camera_toggle, 1)},
     {"temp_sensors", {
-        static_cast<float>(sensor_input.temp_sensor01) / 10.0f, 
-        static_cast<float>(sensor_input.temp_sensor02) / 10.0f,
-        static_cast<float>(sensor_input.temp_sensor03) / 10.0f,
-        static_cast<float>(sensor_input.temp_sensor04) / 10.0f,
-        static_cast<float>(sensor_input.temp_sensor05) / 10.0f,
-        static_cast<float>(sensor_input.temp_sensor06) / 10.0f,
-        static_cast<float>(sensor_input.temp_sensor07) / 10.0f,
-        static_cast<float>(sensor_input.temp_sensor08) / 10.0f,
-        static_cast<float>(sensor_input.temp_sensor09) / 10.0f,
-        static_cast<float>(sensor_input.temp_sensor10) / 10.0f
+        temperature_raw_to_ui(sensor_input.temp_sensor01), 
+        temperature_raw_to_ui(sensor_input.temp_sensor02),
+        temperature_raw_to_ui(sensor_input.temp_sensor03),
+        temperature_raw_to_ui(sensor_input.temp_sensor04),
+        temperature_raw_to_ui(sensor_input.temp_sensor05),
+        temperature_raw_to_ui(sensor_input.temp_sensor06),
+        temperature_raw_to_ui(sensor_input.temp_sensor07),
+        temperature_raw_to_ui(sensor_input.temp_sensor08),
+        temperature_raw_to_ui(sensor_input.temp_sensor09),
+        temperature_raw_to_ui(sensor_input.temp_sensor10)
         }},
     {"qc_camera_fails", count_qc_fails(sensor_input.qc_camera_fails)},
     {"time_stamp", time.str()}
@@ -84,14 +84,20 @@ control_data json_to_control_data(const json& json_elem) {
     return new_data;
 }
 
-
+// take raw conveyor speed and convert it to units/min
 int conveyor_speed_raw_to_ui(uint8_t conveyor_speed)
 {
     return static_cast<int>(round(conveyor_speed * RAW_TO_UI));
 }
 
+// take conveyor speed as units/min and convert to raw
 uint8_t conveyor_speed_ui_to_raw(int conveyor_speed)
 {
     return static_cast<uint8_t>(round(conveyor_speed * UI_TO_RAW));
 }
 
+//take raw temperature, convert to float and round down to two decimal places
+float temperature_raw_to_ui(int16_t temperature)
+{
+    return (static_cast<float>(temperature) * 10) / 100;
+}
