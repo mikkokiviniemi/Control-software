@@ -73,11 +73,11 @@ void simulation_shm_wrapper::running(bool value)
 {
     if (value)
     {
-        *(value_ptr + 27) = 0;
+        *(value_ptr + 27) = 1;
     }
     else
     {
-        *(value_ptr + 27) = 1;
+        *(value_ptr + 27) = 0;
     }
 }
 

@@ -18,6 +18,18 @@
 #include <thread>
 #include <mutex>
 
+int stop{ 0 };
+
+void stop_function()
+{
+    std::cout << "Input 1 to quit:\n";
+    std::cin >> stop;
+
+    if (stop == 1)
+    {
+        return;
+    }
+}
 
 int main()
 {
@@ -28,13 +40,13 @@ int main()
     bool start_period = true;
 
     //simulation_shm_wrapper sensor_data_input{ std::string{"shm_file"} };
-    simulation_shm_wrapper shm{ std::string{"simulation_shm"} };
+    simulation_shm_wrapper shm{ std::string{"Sim/simulation_shm"} };
     
     
     uint16_t failed_sensor_input_validation{ 0 };
     uint8_t failed_control_input_validation{ 0 };
 
-    std::mutex mtx; 
+   
 
     control_data ctrl_data{0,0,0,0};
     sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0 };
@@ -94,9 +106,9 @@ int main()
 
     shm.set_control_data(ctrl_data);
 
-    int stop{ 0 };
+    std::jthread stop_thread(stop_function);
 
-    while (true)
+    while (stop != 1)
     {
         try
         {
@@ -117,7 +129,7 @@ int main()
             // Publish data to UI
             mqtt_client.publish(TOPIC_SEND_SENSOR, sensor_data_json.dump());
             
-            std::cout << "Sensor_data published:\n" << sensor_data_json << '\n';
+            // std::cout << "Sensor_data published:\n" << sensor_data_json << '\n';
             
             // Fetch MQTT control-data and store it in a json
             control_data_json = mqtt_client.input_control_data;

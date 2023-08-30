@@ -33,7 +33,6 @@ class MQTT_Client_UI : public mqtt::callback
             {"heater_2", false},
             {"heater_3", false},
             {"cooler", true },
-            {"qc_camera_toggle", false},
             {"temp_sensors", {25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 25.0}},
             {"qc_camera_fails", 0},
             {"time_stamp", "timestamp"}

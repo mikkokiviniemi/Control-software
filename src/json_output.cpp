@@ -39,7 +39,6 @@ json create_output_sensor_data(const sensor_data& sensor_input, const control_da
     {"heater_2", check_bitmask(ctrl_data.heaters, HEATER_2)},
     {"heater_3", check_bitmask(ctrl_data.heaters, HEATER_3)},
     {"cooler", (ctrl_data.cooler == 1)},
-    {"qc_camera_toggle", check_bitmask(ctrl_data.camera_toggle, 1)},
     {"temp_sensors", {
         temperature_raw_to_ui(sensor_input.temp_sensor01), 
         temperature_raw_to_ui(sensor_input.temp_sensor02),

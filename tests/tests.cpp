@@ -45,7 +45,6 @@ TEST_CASE("MQTT Client")
         {"heater_2", false },
         {"heater_3", false },
         {"cooler", false },
-        {"qc_camera_toggle", false },
         {"conveyor_manual_control", true},
         {"heater_1_manual_control", true},
         {"heater_2_manual_control" , true},
