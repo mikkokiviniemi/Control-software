@@ -4,6 +4,7 @@
 #include "data_structures.hpp"
 #include "input_validation.hpp"
 #include "automatic_controls.hpp"
+#include "json_output.hpp"
 
 #include "mqtt_client.hpp"
 #include "mqtt/async_client.h"
@@ -23,9 +24,15 @@ TEST_CASE("Data validation")
 
 }
 
-TEST_CASE("Control software")
+TEST_CASE("Json")
 {
-     
+    uint8_t raw_speed{ 220 }; //518
+    int ui_speed{ 550 }; //234
+
+    CHECK(conveyor_speed_raw_to_ui(raw_speed) == 518);
+    CHECK(conveyor_speed_ui_to_raw(ui_speed) == 234);
+
+    
 }
 
 TEST_CASE("MQTT Client")

@@ -2,9 +2,13 @@
 #include "json.hpp"
 #include "data_structures.hpp"
 
+#include <cmath>
 #include <ctime>
 #include <iomanip>
 #include <sstream>
+
+constexpr float RAW_TO_UI{ 2.353f };
+constexpr float UI_TO_RAW{ 0.425f };
 
 int count_qc_fails(uint16_t qc_camera_fails)
 {
@@ -30,7 +34,7 @@ json create_output_sensor_data(const sensor_data& sensor_input, const control_da
     std::stringstream time;
     time << std::put_time(std::localtime(&sensor_input.time_stamp), "%FT%TGMT+2");
     json output_data = {
-    {"speed_of_conveyor", static_cast<int>(sensor_input.speed_of_conveyor)},
+    {"speed_of_conveyor", conveyor_speed_raw_to_ui(sensor_input.speed_of_conveyor)},
     {"heater_1", check_bitmask(ctrl_data.heaters, HEATER_1)},
     {"heater_2", check_bitmask(ctrl_data.heaters, HEATER_2)},
     {"heater_3", check_bitmask(ctrl_data.heaters, HEATER_3)},
@@ -69,7 +73,7 @@ json create_output_sensor_data(const sensor_data& sensor_input, const control_da
 //Convert Json to control_data
 control_data json_to_control_data(const json& json_elem) {
     control_data new_data;
-    new_data.speed_of_conveyor = static_cast<uint8_t>(json_elem["speed_of_conveyor"]);
+    new_data.speed_of_conveyor = conveyor_speed_ui_to_raw(json_elem["speed_of_conveyor"]);
     bool heater_1 = json_elem["heater_1"];
     bool heater_2 = json_elem["heater_2"];
     bool heater_3 = json_elem["heater_3"];
@@ -79,3 +83,15 @@ control_data json_to_control_data(const json& json_elem) {
     new_data.camera_toggle = json_elem["qc_camera_toggle"];
     return new_data;
 }
+
+
+int conveyor_speed_raw_to_ui(uint8_t conveyor_speed)
+{
+    return static_cast<int>(round(conveyor_speed * RAW_TO_UI));
+}
+
+uint8_t conveyor_speed_ui_to_raw(int conveyor_speed)
+{
+    return static_cast<uint8_t>(round(conveyor_speed * UI_TO_RAW));
+}
+
