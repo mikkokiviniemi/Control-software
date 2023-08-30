@@ -32,17 +32,17 @@ TEST_CASE("MQTT Client")
 {
     json control_data_json // input from UI
     {
-    {"speed_of_conveyor", 0 },
-    {"heater_1", false },
-    {"heater_2", false },
-    {"heater_3", false },
-    {"cooler", false },
-    {"qc_camera_toggle", false },
-    {"conveyor_manual_control", true},
-    {"heater_1_manual_control", true},
-    {"heater_2_manual_control" , true},
-    {"heater_3_manual_control", true},
-    {"cooler_manual_control", true}
+        {"speed_of_conveyor", 0 },
+        {"heater_1", false },
+        {"heater_2", false },
+        {"heater_3", false },
+        {"cooler", false },
+        {"qc_camera_toggle", false },
+        {"conveyor_manual_control", true},
+        {"heater_1_manual_control", true},
+        {"heater_2_manual_control" , true},
+        {"heater_3_manual_control", true},
+        {"cooler_manual_control", true}
     };
 
     const std::string ADDRESS = "tcp://test.mosquitto.org:1883";
