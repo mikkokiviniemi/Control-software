@@ -27,7 +27,7 @@ int main()
     bool heater_period = true;
     bool start_period = true;
 
- //   simulation_shm_wrapper sensor_data_input{ std::string{"shm_file"} };
+    //simulation_shm_wrapper sensor_data_input{ std::string{"shm_file"} };
     simulation_shm_wrapper shm{ std::string{"simulation_shm"} };
     
     
@@ -126,18 +126,7 @@ int main()
         }
         
         // Automatic loop changes the control data
-
-        if (std::chrono::system_clock::now() - start_time > std::chrono::seconds(20)) {
-            start_period = false;
-            if (std::chrono::system_clock::now() - heater_timing > std::chrono::seconds(5) && heater_period) { 
-                heater_period = false;
-                heater_timing = std::chrono::system_clock::now();
-            }
-            if (std::chrono::system_clock::now() - heater_timing > std::chrono::seconds(10) && !heater_period) { 
-                heater_period = true;
-                heater_timing = std::chrono::system_clock::now();
-            }
-        }
+        heater_period_timing(start_time, heater_timing, heater_period, start_period);
         automatic_loop(sensor_input,ctrl_data,control_data_json,heater_period,start_period);
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
 

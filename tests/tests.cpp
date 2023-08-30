@@ -61,15 +61,11 @@ TEST_CASE("MQTT Client")
     CHECK(test_client_user.input_control_data == json::parse(control_data_json.dump()));
 }
 
-/*
+
 TEST_CASE("Automatic control")
 {
     sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0};
-    CHECK(mean_temp(sensor_input) == 25);
+    CHECK(highest_temp(sensor_input) == 25);
     CHECK(conveyor_control(sensor_input) == OPTIMAL_SOC);
-    CHECK(heating_control(sensor_input) == 0b00000111);
     CHECK(cooling_control(sensor_input) == 0);
-
-
 }
-*/
