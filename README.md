@@ -8,7 +8,7 @@ We use shared memory to communicate with the simulated hardware and MQTT to comm
 * [Build and Prerequisites](#build-and-prerequisites)
   + [Install prerequisites for Paho](#install-prerequisites-for-paho)
   + [Build and install Paho C library using cmake (anywhere on computer)](#build-and-install-paho-c-library-using-cmake--anywhere-on-computer)
-  + [Build and install Paho C++ library using cmake (anywhere on computer)](#build-and-install-paho-c++-library-using-cmake--anywhere-on-computer)
+  + [Build and install Paho C++ library using cmake (anywhere on computer)](#build-and-install-paho-c-library-using-cmake-anywhere-on-computer-1)
 * [Run Locally](#run-locally)
   + [Clone the project](#clone-the-project)
   + [Run](#run)
