@@ -14,7 +14,7 @@ control_data json_to_control_data(const json& json_elem);
 int conveyor_speed_raw_to_ui(uint8_t conveyor_speed);
 uint8_t conveyor_speed_ui_to_raw(int conveyor_speed);
 
-float temperature_raw_to_ui(float value);
+float temperature_raw_to_ui(int16_t temperature);
 
 
 // time functions for time_stamp

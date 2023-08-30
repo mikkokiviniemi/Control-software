@@ -52,7 +52,7 @@ void MQTT_Client::subscribe(const std::string& topic){
 void MQTT_Client::message_arrived(mqtt::const_message_ptr msg) {
     std::string topic = msg->get_topic();
     if (topic == TOPIC_RECEIVE) {
-        std::cout << "message from UI: " << msg->get_payload_str() << '\n';
+        // std::cout << "message from UI: " << msg->get_payload_str() << '\n';
         input_control_data = json::parse(msg->get_payload_str());
     }
 }

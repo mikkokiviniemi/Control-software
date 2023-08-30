@@ -58,7 +58,6 @@ void print_sensor_data(const json& sensor_data_json)
     std::cout << "heater_2: " << sensor_data_json["heater_2"] << '\n';
     std::cout << "heater_3: " << sensor_data_json["heater_3"] << '\n';
     std::cout << "cooler: " << sensor_data_json["cooler"] << '\n';
-    std::cout << "qc_camera_toggle: " << sensor_data_json["qc_camera_toggle"] << '\n';
     std::cout << "temperatures: "<< std::fixed << std::setprecision(1) << sensor_data_json["temp_sensors"][0] << ' ';
     std::cout << std::fixed << std::setprecision(1) << sensor_data_json["temp_sensors"][1] << ' ';
     std::cout << std::fixed << std::setprecision(1) << sensor_data_json["temp_sensors"][2] << ' ';
@@ -164,7 +163,6 @@ int main () {
         {"heater_2", false},
         {"heater_3", false},
         {"cooler", true },
-        {"qc_camera_toggle", false},
         {"temp_sensors", {25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 25.0}},
         {"qc_camera_fails", 0},
         {"time_stamp", "timestamp"}
