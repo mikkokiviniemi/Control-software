@@ -2,8 +2,6 @@
 #include "json_output.hpp"
 #include "json.hpp"
 
-#include <chrono>
-#include <thread>
 
 MQTT_Client_UI::MQTT_Client_UI(const std::string& address, const std::string& user_id) 
     : client(address,user_id) {

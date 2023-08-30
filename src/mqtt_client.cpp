@@ -2,9 +2,6 @@
 #include "json_output.hpp"
 #include "json.hpp"
 
-#include <chrono>
-#include <thread>
-
 MQTT_Client::MQTT_Client(const std::string& address, const std::string& user_id) 
     : client(address,user_id) {
         client.set_callback(*this); // add a callback to the client to receive messages
@@ -25,8 +22,16 @@ void MQTT_Client::connect_broker() {
 }
 
 void MQTT_Client::disconnect_broker() {
-    client.disconnect()->wait();
-    std::cout << "disconnected\n";
+    try
+    {
+        client.disconnect()->wait();
+        std::cout << "disconnected\n";
+    }
+    catch(const mqtt::exception& e)
+    {
+        std::cerr << "Couldn't disconnect: " << e.what() << '\n';
+    }
+    
 }
 
 void MQTT_Client::publish(const std::string& topic, const std::string& payload){
@@ -36,7 +41,7 @@ void MQTT_Client::publish(const std::string& topic, const std::string& payload){
     try {
         client.publish(msg)->wait();
     } catch (const mqtt::exception& e){
-        std::cerr << "Error: " << e.what() << "\n";
+        std::cerr << "Error: " << e.what() << '\n';
     }
 }
 
@@ -52,14 +57,13 @@ void MQTT_Client::subscribe(const std::string& topic){
 void MQTT_Client::message_arrived(mqtt::const_message_ptr msg) {
     std::string topic = msg->get_topic();
     if (topic == TOPIC_RECEIVE) {
-        // std::cout << "message from UI: " << msg->get_payload_str() << '\n';
         input_control_data = json::parse(msg->get_payload_str());
     }
 }
 
 // a function that the callback uses
 void MQTT_Client::connection_lost(const std::string& cause) {
-    std::cout << "\nConnection lost" << '\n';
+    std::cout << "\nConnection lost" << std::endl;
     if (!cause.empty())
         std::cout << "\tcause: " << cause << '\n';
 }

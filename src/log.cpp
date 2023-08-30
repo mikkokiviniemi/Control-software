@@ -2,7 +2,6 @@
 #include "json_output.hpp"
 #include "json.hpp"
 
-#include <chrono>
 #include <iomanip>
 
 MQTT_Client_Log::MQTT_Client_Log(const std::string& address, const std::string& user_id) 
@@ -25,20 +24,16 @@ void MQTT_Client_Log::connect_broker() {
 }
 
 void MQTT_Client_Log::disconnect_broker() {
-    client.disconnect()->wait();
-    std::cout << "disconnected\n";
-}
-
-/* void MQTT_Client_Log::publish(const std::string& topic, const std::string& payload){
-    mqtt::message_ptr msg = mqtt::make_message(topic, payload);
-    msg->set_qos(0);
-
-    try {
-        client.publish(msg)->wait();
-    } catch (const mqtt::exception& e){
-        std::cerr << "Error: " << e.what() << "\n";
+    try
+    {
+        client.disconnect()->wait();
+        std::cout << "disconnected\n";
     }
-} */
+    catch(const mqtt::exception& e)
+    {
+        std::cerr << "Couldn't disconnect: " << e.what() << '\n';
+    }
+}
 
 void MQTT_Client_Log::subscribe(const std::string& topic){
     try {
@@ -71,7 +66,6 @@ void MQTT_Client_Log::connection_lost(const std::string& cause) {
 
 void print_sensor_log(const json& sensor_data_json)
 {
-    std::cout << std::left;
     float sensor1{ sensor_data_json["temp_sensors"][0] };
     float sensor2{ sensor_data_json["temp_sensors"][1] };
     float sensor3{ sensor_data_json["temp_sensors"][2] };
@@ -103,7 +97,7 @@ void print_sensor_log(const json& sensor_data_json)
     std::cout << sensor9 << ' ';
     std::cout << sensor10 << '\n';
     std::cout << "qc_camera_fails:\t" << sensor_data_json["qc_camera_fails"] << '\n';
-    std::cout << "timestamp:\t\t" << sensor_data_json["time_stamp"] << "\n\n";
+    std::cout << "timestamp:\t\t" << sensor_data_json["time_stamp"] << '\n' << std::endl;
 }
 
 void print_control_log(const json& control_data_json)
@@ -120,7 +114,7 @@ void print_control_log(const json& control_data_json)
     std::cout << std::right << std::setw(75) <<  "Heater1 manual control: " << control_data_json["heater_1_manual_control"] << '\n';
     std::cout << std::right << std::setw(75) <<  "Heater2 manual control: " << control_data_json["heater_2_manual_control"] << '\n';
     std::cout << std::right << std::setw(75) <<  "Heater3 manual control: " << control_data_json["heater_3_manual_control"] << '\n';
-    std::cout << std::right << std::setw(75) <<  "Cooler manual control: "  << control_data_json["cooler_manual_control"] << "\n\n";
+    std::cout << std::right << std::setw(75) <<  "Cooler manual control: "  << control_data_json["cooler_manual_control"] << '\n' << std::endl;
 }
 
 int main() {

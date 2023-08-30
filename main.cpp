@@ -1,5 +1,3 @@
-#define NDEBUG
-
 #include "data_structures.hpp"
 #include "text_ui.hpp"
 #include "json_output.hpp"
@@ -46,8 +44,6 @@ int main()
     uint16_t failed_sensor_input_validation{ 0 };
     uint8_t failed_control_input_validation{ 0 };
 
-   
-
     control_data ctrl_data{0,0,0,0};
     sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0 };
         
@@ -66,35 +62,6 @@ int main()
     {"heater_3_manual_control", true},
     {"cooler_manual_control", true}
     };
-    
-    //control_data_json = UI_MQTT_PALIKKA(sensor_data_json, control_data_json, camera_feed_json);
-    //
-
-    //control_data_json = mqtt_vastaanottaja_palikka();
-    // mqtt_lähettäjä_palikka(sensor_data_json);
-    // mqtt_lähettäjä_palikka(camera_feed_json);
-
-    // std::thread ui_thread([&]() {
-    //     while (is_running) {
-    //         // UI muuttaa output_jsonia - Tämä korvataan MQTT feedillä
-    //         // MQTT feed, subscribe 1 topic (UI:lta control dataa), publish 2 topic (sensor_data ja camera_feed)
-    //         json_ui(control_data_json, sensor_data_json, camera_feed_json);
-
-            
-    //         //Output json muuttaa control_dataa
-    //         std::lock_guard<std::mutex> lock(mtx);
-    //         ctrl_data = json_to_control_data(control_data_json);
-    //     }
-    // });
-    
-    /*
-    Saadaan sensor data (YKKÖS RYHMÄLTÄ)
-    Lähetetään sensor data ja control data (KOLMOS RYHMÄLLE)
-    Saadaan json data (KOLMOS RYHMÄLTÄ)
-    Tehdään automaatio
-    lähetetään control data (YKKÖS RYHMÄLLE)
-
-    */
 
     // // Initialize and connect MQTT client, subscribe to topic
     MQTT_Client mqtt_client (ADDRESS, USER_ID_CONTROL);
@@ -153,43 +120,7 @@ int main()
         {
             std::cerr << e.what() << '\n';
         }
-        
-
         // std::this_thread::sleep_for(std::chrono::milliseconds(500));
-
-        
-
     }
-
-
-    
-    // std::thread automation_thread([&]() {
-    //     while (is_running) {
-    //         //Fetch MQTT control-data
-           
-    //         //Automatic loop muuttaa control_dataa
-    //         automatic_loop(sensor_input,ctrl_data, control_data_json);
-    //         std::this_thread::sleep_for(std::chrono::milliseconds(500));
-    //     }
-    // });
-    // std::thread data_thread([&]() {
-    //     while (is_running) {
-    //             //Tuottaa dummy_dataa (muuttaa sensor_inputtia) ja laittaa timestampin
-    //             dummy_data_generator(sensor_input, ctrl_data);
-    //             std::chrono::time_point<std::chrono::system_clock> now = std::chrono::system_clock::now();
-    //             sensor_input.time_stamp = std::chrono::system_clock::to_time_t(now);
-
-    //             //Tehdään (output jsonit jotka lähetetään UI:lle)
-    //             sensor_data_json = create_output_sensor_data(sensor_input, ctrl_data);
-    //             camera_feed_json = create_camera_feed_output(sensor_input);
-    //             std::this_thread::sleep_for(std::chrono::milliseconds(1000));
-    //     }
-    // });
-
-    // automation_thread.join();
-    // data_thread.join();
-    // ui_thread.join(); 
-
-
     return 0;
 }

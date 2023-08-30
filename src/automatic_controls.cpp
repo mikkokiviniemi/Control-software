@@ -16,23 +16,6 @@ int16_t highest_temp(const sensor_data& data) {
     }
     return highest_temp;
 }
-
-//Calculates mean temperature from sensor data
-int16_t mean_temp (const sensor_data& data) {
-    int16_t addition = 
-    data.temp_sensor01 +
-    data.temp_sensor02 +
-    data.temp_sensor03 +
-    data.temp_sensor04 +
-    data.temp_sensor05 +
-    data.temp_sensor06 +
-    data.temp_sensor07 +
-    data.temp_sensor08 +
-    data.temp_sensor09 +
-    data.temp_sensor10;
-    return addition/10;
-}
-
 //Automatic control block for conveyor speed control. Takes values from sensor_data and makes changes to conveyor speed.
 uint8_t conveyor_control(const sensor_data &data)
 {
@@ -45,7 +28,7 @@ uint8_t conveyor_control(const sensor_data &data)
     return soc;
 }
 
-//Toggle heater
+//Toggle heater (state on/off)
 void toggle_heater(uint8_t& heaters, const uint8_t heater, bool state) {
     if (state) {
         heaters |= heater; // Set the bit to 1
@@ -78,7 +61,13 @@ uint8_t cooling_control(const sensor_data &data)
     return cooling;
 }
 
-//Loop block for automation
+/*
+Block for automation 
+Changes control data according to automation:
+- Conveyor target speed is OPTIMAL_SOC. If temperature is over 80, target speed is 0
+- Heaters are on according to heater_period
+- Cooler is on according to COOLING_TEMP
+*/
 void automatic_loop(const sensor_data &sens_data, control_data& ctrl_data, const json& control_json, const bool& heater_period, const bool& start_period)
 {
     bool failure_mode = false; //IF no camera fails -> failure_mode = false
@@ -120,7 +109,8 @@ void automatic_loop(const sensor_data &sens_data, control_data& ctrl_data, const
     }
 }
 
-//Changes heater_period boolean according to timing
+/*Changes heater_period boolean according to timing 
+STARTING_PERIOD_TIME -> HEATERS_OFF_PERIOD <-> HEATERS_ON_PERIOD  */
 void heater_period_timing(std::chrono::_V2::system_clock::time_point& start_time, 
                    std::chrono::_V2::system_clock::time_point& heater_timing, 
                    bool& heater_period, bool& start_period) {
