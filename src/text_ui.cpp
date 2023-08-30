@@ -99,13 +99,13 @@ bool control_data_input(json& output)
     std::getline(std::cin, choice);
 
         if (choice == "q") {
-            output["heater1_manual_control"] = !output["heater1_manual_control"];
+            output["heater_1_manual_control"] = !output["heater_1_manual_control"];
         }
         else if (choice == "w") {
-            output["heater2_manual_control"] = !output["heater2_manual_control"];
+            output["heater_2_manual_control"] = !output["heater_2_manual_control"];
         }
         else if (choice == "e") {
-            output["heater3_manual_control"] = !output["heater3_manual_control"];
+            output["heater_3_manual_control"] = !output["heater_3_manual_control"];
         }
         else if (choice == "r") {
             output["cooler_manual_control"] = !output["cooler_manual_control"];
@@ -176,11 +176,11 @@ int main () {
     {"cooler", false },
     {"cooler_manual_control", true},
     {"heater_1", false },
-    {"heater1_manual_control", true},
+    {"heater_1_manual_control", true},
     {"heater_2", false },
-    {"heater2_manual_control", true},
+    {"heater_2_manual_control", true},
     {"heater_3", false },
-    {"heater3_manual_control", true},
+    {"heater_3_manual_control", true},
     {"speed_of_conveyor", 0 },
     {"qc_camera_toggle", false }
     };
