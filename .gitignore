@@ -50,6 +50,6 @@ _deps
 # All .vscode folders
 **/.vscode/*
 
-# All build folders
-**/build/*
+# The root build folder
+build/**
 

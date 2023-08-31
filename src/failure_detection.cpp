@@ -92,4 +92,5 @@ std::string failure_detection(const control_data& ctrl_data, const sensor_data& 
         return {""};
     }
 
+    
 }
