@@ -21,7 +21,7 @@ int stop{ 0 };
 
 void stop_function()
 {
-    std::cout << "Input 1 to quit:\n";
+    std::cout << "Input 1 to quit:" << std::endl;
     std::cin >> stop;
 
     if (stop == 1)
