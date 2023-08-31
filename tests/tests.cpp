@@ -61,7 +61,7 @@ TEST_CASE("Data validation")
     }
     
     std::cout << failures;
-    CHECK(failures == std::string{ "heaters and/or cooler possibly faulty\n" });
+    CHECK(failures == std::string{ "heaters and/or cooler possibly faulty " });
 
     sensor_input.temp_sensor01 += 50;
     sensor_input.temp_sensor02 += 50;
@@ -77,12 +77,12 @@ TEST_CASE("Data validation")
     CHECK(failures == std::string{ "" });
     ctrl_data.speed_of_conveyor = 200;
     
-    for (int i{ 0 }; i < 6; ++i)
+    for (int i{ 0 }; i < 20; ++i)
     {
         failures = failure_detection(ctrl_data, sensor_input);
     }
     std::cout << failures << '\n';
-    CHECK(failures == std::string{ "conveyor possibly faulty\n" });
+    CHECK(failures == std::string{ "conveyor possibly faulty " });
 
 }
 
@@ -97,37 +97,42 @@ TEST_CASE("Json")
     
 }
 
-// TEST_CASE("MQTT Client")
-// {
-//     json control_data_json // input from UI
-//     {
-//         {"speed_of_conveyor", 0 },
-//         {"heater_1", false },
-//         {"heater_2", false },
-//         {"heater_3", false },
-//         {"cooler", false },
-//         {"conveyor_manual_control", true},
-//         {"heater_1_manual_control", true},
-//         {"heater_2_manual_control" , true},
-//         {"heater_3_manual_control", true},
-//         {"cooler_manual_control", true}
-//     };
+TEST_CASE("MQTT Client")
+{
+    json control_data_json // input from UI
+    {
+        {"speed_of_conveyor", 0 },
+        {"heater_1", false },
+        {"heater_2", false },
+        {"heater_3", false },
+        {"cooler", false },
+        {"qc_camera_toggle", false },
+        {"conveyor_manual_control", true},
+        {"heater_1_manual_control", true},
+        {"heater_2_manual_control" , true},
+        {"heater_3_manual_control", true},
+        {"cooler_manual_control", true}
+    };
 
-//     const std::string ADDRESS = "tcp://test.mosquitto.org:1883";
-//     const std::string TEST_ID_1 = "control_sw_1";
-//     const std::string TEST_ID_2 = "user_sw";
-//     const std::string TOPIC_SEND_SENSOR = "test_sw_topic";
+    const std::string ADDRESS = "tcp://test.mosquitto.org:1883";
+    const std::string TEST_ID_1 = "control_sw_1";
+    const std::string TEST_ID_2 = "user_sw";
+    const std::string TOPIC_SEND_SENSOR = "test_sw_topic";
 
-//     MQTT_Client test_client_sender (ADDRESS, TEST_ID_1);
-//     MQTT_Client test_client_user (ADDRESS, TEST_ID_2);
-//     test_client_sender.connect_broker();
-//     test_client_user.connect_broker();
+    // Create two clients and connect to test server
+    MQTT_Client test_client_sender (ADDRESS, TEST_ID_1);
+    MQTT_Client test_client_user (ADDRESS, TEST_ID_2);
+    test_client_sender.connect_broker();
+    test_client_user.connect_broker();
 
-//     test_client_user.subscribe(TOPIC_SEND_SENSOR);
-//     test_client_sender.publish(TOPIC_SEND_SENSOR, control_data_json.dump());
-//     std::this_thread::sleep_for(std::chrono::milliseconds(500));
-//     CHECK(test_client_user.input_control_data == json::parse(control_data_json.dump()));
-// }
+    // Subscribe to topic with user, send to topic with sender 
+    test_client_user.subscribe(TOPIC_SEND_SENSOR);
+    test_client_sender.publish(TOPIC_SEND_SENSOR, control_data_json.dump());
+    std::this_thread::sleep_for(std::chrono::milliseconds(500)); // wait 0,5 sec
+
+    // Check to see that data received is the same as published by other client
+    CHECK(test_client_user.input_control_data == json::parse(control_data_json.dump()));
+}
 
 
 TEST_CASE("Automatic control")
