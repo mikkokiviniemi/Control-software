@@ -2,8 +2,8 @@
 # Project documentation 🗎
 
 ## General description
-The program simulates a control software / firmware of a production line that includes e.g. a conveyor belt, 3 heaters, a cooling system, 10 temperature sensors and a quality assurance camera. The software receives simulated sensor data from a simulator created by another team (link).
-The sensor input data is used in the automatic control of the system and translated to human-readable form for the UI (link). The automatic control system can be overriden by manual control of the parts if the user requests it through control input data, which is received over MQTT.
+The program simulates a control software / firmware of a production line that includes e.g. a conveyor belt, 3 heaters, a cooling system, 10 temperature sensors and a quality assurance camera. The software receives simulated sensor data from a [simulator](https://github.com/kmoilane/graduation_project) created by another team.
+The sensor input data is used in the automatic control of the system and translated to human-readable form for the [UI](https://github.com/heidikrisse/ProductionLineUi). The automatic control system can be overriden by manual control of the parts if the user requests it through control input data, which is received over MQTT.
 ### Input data from sensors
 The software receives input data from the simulation. The raw sensor data includes the speed of conveyor as uint8_t (0-255) representing 255 at full speed of 600 units produced per minute. The QA camera is received as a uint16_t bitmask representing 0-16 failed units. The temperature sensor readings are int16_t values representing millivolts. Our control software adds a time stamp to the received data.
 ### Input data from UI
