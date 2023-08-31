@@ -29,7 +29,7 @@ bool check_bitmask(uint8_t bitmask, uint8_t flag)
     return (bitmask & flag);
 }
 
-json create_output_sensor_data(const sensor_data& sensor_input, const control_data& ctrl_data) {
+json create_output_sensor_data(const sensor_data& sensor_input, const control_data& ctrl_data, const std::string& failures) {
     std::stringstream time;
     time << std::put_time(std::localtime(&sensor_input.time_stamp), "%FT%TGMT+2");
     json output_data = {
@@ -52,7 +52,7 @@ json create_output_sensor_data(const sensor_data& sensor_input, const control_da
         }},
     {"qc_camera_fails", count_qc_fails(sensor_input.qc_camera_fails)},
     {"time_stamp", time.str()},
-    {"failures", ""}    
+    {"failures", failures}    
     };
     return output_data;
 }

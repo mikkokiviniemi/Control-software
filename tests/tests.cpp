@@ -46,6 +46,7 @@ TEST_CASE("Data validation")
     ctrl_data.speed_of_conveyor = 150;
 
     sensor_input.speed_of_conveyor = 150;
+    sensor_input.temp_sensor01 = 250;
 
     std::string failures{ failure_detection(ctrl_data, sensor_input) };
     for (int i{ 0 }; i < 5; ++i)
@@ -76,10 +77,11 @@ TEST_CASE("Data validation")
     CHECK(failures == std::string{ "" });
     ctrl_data.speed_of_conveyor = 200;
     
-    for (int i{ 0 }; i < 5; ++i)
+    for (int i{ 0 }; i < 6; ++i)
     {
         failures = failure_detection(ctrl_data, sensor_input);
     }
+    std::cout << failures << '\n';
     CHECK(failures == std::string{ "conveyor possibly faulty\n" });
 
 }

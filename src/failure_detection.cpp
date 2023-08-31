@@ -129,7 +129,7 @@ std::string failure_detection(const control_data& ctrl_data, const sensor_data& 
         --rounds_of_temperature_anomalies;
     }
 
-    if (sensor_input.speed_of_conveyor < previous_sensor.speed_of_conveyor
+    if (sensor_input.speed_of_conveyor <= previous_sensor.speed_of_conveyor
         && ctrl_data.speed_of_conveyor > sensor_input.speed_of_conveyor)
     {
             ++rounds_of_conveyor_anomalies;

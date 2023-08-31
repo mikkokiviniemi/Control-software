@@ -3,6 +3,7 @@
 #include "json_output.hpp"
 #include "input_validation.hpp"
 #include "automatic_controls.hpp"
+#include "failure_detection.hpp"
 
 #include "mqtt_client.hpp"
 #include "shared_memory_wrapper.hpp"
@@ -59,6 +60,8 @@ int main()
     {"cooler_manual_control", true}
     };
 
+    std::string failures{ "" };
+
     // // Initialize and connect MQTT client, subscribe to topic
     MQTT_Client mqtt_client (ADDRESS, USER_ID_CONTROL);
     mqtt_client.connect_broker();
@@ -87,7 +90,7 @@ int main()
         if (now - mqtt_timer >= std::chrono::milliseconds(1000))
         {
             // Create output json to UI
-            sensor_data_json = create_output_sensor_data(sensor_input, ctrl_data);
+            sensor_data_json = create_output_sensor_data(sensor_input, ctrl_data, failures);
 
             // Publish data to UI
             mqtt_client.publish(TOPIC_SEND_SENSOR, sensor_data_json.dump());
@@ -102,7 +105,10 @@ int main()
         
         // Automatic loop changes the control data
         heater_period_timing(start_time, heater_timing, heater_period, start_period);
-        automatic_loop(sensor_input,ctrl_data,control_data_json,heater_period,start_period);
+        automatic_loop(sensor_input, ctrl_data, control_data_json, heater_period, start_period);
+
+        failures = failure_detection(ctrl_data, sensor_input);
+
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
         // Send control data to simulation
