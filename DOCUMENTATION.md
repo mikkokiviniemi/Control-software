@@ -12,6 +12,8 @@ The control data from UI is received as a JSON string and parsed into the contro
 The translated sensor data and current manual/automatic toggle settings are made into a JSON object with nlohmann's JSON for C++ library (https://json.nlohmann.me/). The data includes conveyor speed in units per minute (integer value), booleans for every heater and the cooler (on/off) and booleans for their manual toggle, 10 readings (float) of temperature sensors in an array, number of QA camera failed units as an integer, and a time stamp (string).
 ### Output data to sensors
 Control data received from UI as a string/JSON is converted and given to the sensor simulation through shared memory, and includes conveyor target speed (uint8_t), control toggle of QA camera (uint8_t), toggles for the heaters (one uint8_t) and the cooler (uint8_t). Also, there is a single uint8_t for the shutdown signal of the simulator.
+### Data conversion to/from JSON
+The conversion functions defined in json_output.cpp convert raw sensor data of the QA camera (uint16_t bitmask) and conveyor speed into a JSON by checking the bitmask values of the camera against a flag, and by multiplying the conveyor speed by constant value raw_to_ui. The control data from UI is parsed into a control data struct object.
 ### Shared memory interface with convoyer
 Shared memory is accessed by associated file from root folder (source folder) in the path "Sim/simulation_shm". This file association is currently shared with the simulation. This can be changed in the programs main function.
 
