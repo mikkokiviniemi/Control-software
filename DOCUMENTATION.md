@@ -7,7 +7,19 @@ Documentation can be quite technical, since it is not going to be facing end-use
 ### Shared memory interface with convoyer
 TEXT
 ### Automatic (and manual) control
-TEXT
+Goals for automatic control:
+- Tries to maximize product output, while causing nothing to break
+- Allows toggling manual overrides to any controls
+- Simple internal logic using sensor data and user controls 
+
+Changes made to control data according to automation:
+- Conveyor target speed is OPTIMAL_SOC. currently if temperature is over 80, target speed is 0
+- Heaters are on according to heater_period (20s on -> 10s off <-> 5s on)
+- Cooler is on according to setted COOLING_TEMP (currently 60)
+- heater_periods, OPTIMAL_SOC, COOLING_TEMP can be changed from automatic_controls.hpp
+
+Manual control:
+- If manual control is setted on. Simply keep the manual settings on and in those parts where there are no manual settings, continue with automatic.
 ### MQTT interface with UI
 TEXT
 
