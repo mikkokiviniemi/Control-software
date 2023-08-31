@@ -26,6 +26,7 @@ constexpr uint8_t HEATER_3  { 0b100 };
 *  SHM_ptr + 23  = cooler control        (1 byte)    (output) *
 *  SHM_ptr + 24  = camera control        (1 byte)    (output) *
 *  SHM_ptr + 25  = camera data           (2 bytes)   (input)  *
+*  SHM_ptr + 27  = exit signal           (1 byte)    (output) *
 **************************************************************/
 
 //Control data structure

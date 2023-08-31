@@ -9,8 +9,8 @@
 
 #include "mqtt_client.hpp"
 #include "mqtt/async_client.h"
-#include <cstdint>
 
+#include <cstdint>
 
 TEST_CASE("Data validation")
 {
@@ -32,9 +32,56 @@ TEST_CASE("Data validation")
     CHECK(sensor_data_is_empty(sensor_input_empty));
     CHECK(control_data_is_empty(ctrl_data_empty));
 
-    static uint8_t test;
+    CHECK(heater_on(ctrl_data, 0));
+    CHECK(heater_on(ctrl_data, 1));
+    CHECK(heater_on(ctrl_data, 2));
+    
+    CHECK(!heater_on(ctrl_data_empty, 0));
+    CHECK(!heater_on(ctrl_data_empty, 1));
+    CHECK(!heater_on(ctrl_data_empty, 2));
 
-    CHECK(test == 0);
+    ctrl_data.camera_toggle = 1;
+    ctrl_data.cooler = 0;
+    ctrl_data.heaters = 0b111;
+    ctrl_data.speed_of_conveyor = 150;
+
+    sensor_input.speed_of_conveyor = 150;
+
+    std::string failures{ failure_detection(ctrl_data, sensor_input) };
+    for (int i{ 0 }; i < 5; ++i)
+    {
+        sensor_input.temp_sensor01 -= 10;
+        sensor_input.temp_sensor02 -= 10;
+        sensor_input.temp_sensor03 -= 10;
+        sensor_input.temp_sensor04 -= 10;
+        sensor_input.temp_sensor05 -= 10;
+        failures = failure_detection(ctrl_data, sensor_input);
+
+    }
+    
+    std::cout << failures;
+    CHECK(failures == std::string{ "heaters and/or cooler possibly faulty\n" });
+
+    sensor_input.temp_sensor01 += 50;
+    sensor_input.temp_sensor02 += 50;
+    sensor_input.temp_sensor03 += 50;
+    sensor_input.temp_sensor04 += 50;
+    sensor_input.temp_sensor05 += 50;
+
+    for (int i{ 0 }; i < 5; ++i)
+    {
+        failures = failure_detection(ctrl_data, sensor_input);
+    }
+    
+    CHECK(failures == std::string{ "" });
+    ctrl_data.speed_of_conveyor = 200;
+    
+    for (int i{ 0 }; i < 5; ++i)
+    {
+        failures = failure_detection(ctrl_data, sensor_input);
+    }
+    CHECK(failures == std::string{ "conveyor possibly faulty\n" });
+
 }
 
 TEST_CASE("Json")
