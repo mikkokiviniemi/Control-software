@@ -5,8 +5,8 @@
 #include "json.hpp"
 #include <string>
 
-inline const std::string ADDRESS = "4.tcp.eu.ngrok.io:17857";
-// inline const std::string ADDRESS = "tcp://test.mosquitto.org:1883";
+// inline const std::string ADDRESS = "4.tcp.eu.ngrok.io:17857";
+inline const std::string ADDRESS = "tcp://test.mosquitto.org:1883";
 inline const std::string USER_ID_CONTROL = "control_sw";
 inline const std::string TOPIC_SEND_SENSOR = "sensor_control_data1";
 inline const std::string TOPIC_RECEIVE = "conveyor_params"; // from UI

@@ -16,7 +16,7 @@ find_package(PahoMqttCpp REQUIRED)
 
 add_subdirectory(src)
 
-target_link_libraries(main json_output mqtt_client automatic_controls shared_memory_wrapper)
+target_link_libraries(main json_output mqtt_client automatic_controls shared_memory_wrapper failure_detection)
 
 add_subdirectory(tests)
 

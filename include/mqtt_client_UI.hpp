@@ -34,7 +34,8 @@ class MQTT_Client_UI : public mqtt::callback
             {"cooler", true },
             {"temp_sensors", {25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 25.0, 25.0}},
             {"qc_camera_fails", 0},
-            {"time_stamp", "timestamp"}
+            {"time_stamp", "timestamp"},
+            {"failures", ""}
         };
         
     private:

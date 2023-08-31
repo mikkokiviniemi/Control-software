@@ -5,8 +5,8 @@
 #include "json.hpp"
 #include <string>
 
-const std::string ADDRESS_LOG = "4.tcp.eu.ngrok.io:17857";
-// const std::string ADDRESS_LOG = "tcp://test.mosquitto.org:1883";
+// const std::string ADDRESS_LOG = "4.tcp.eu.ngrok.io:17857";
+const std::string ADDRESS_LOG = "tcp://test.mosquitto.org:1883";
 const std::string USER_ID_LOG{ "control_sw_log" }; // text UI uses this
 const std::string TOPIC_LOG_SENSOR = "sensor_control_data1";
 const std::string TOPIC_LOG_CONTROL = "conveyor_params"; // from UI

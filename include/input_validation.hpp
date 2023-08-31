@@ -17,8 +17,8 @@ constexpr uint16_t FAILED_TEMP_SENSOR09 { 0b100000000 };
 constexpr uint16_t FAILED_TEMP_SENSOR10 { 0b1000000000 };
 
 constexpr uint8_t FAILED_HEATERS{ 0b1 };
-constexpr uint8_t FAILED_COOLER{ 0b1 };
-constexpr uint8_t FAILED_CAMERA_TOGGLE{ 0b1 };
+constexpr uint8_t FAILED_COOLER{ 0b10 };
+constexpr uint8_t FAILED_CAMERA_TOGGLE{ 0b100 };
 
 constexpr uint8_t HEATER_MAX_VALUE{ 0b00000111 };
 

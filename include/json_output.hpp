@@ -3,10 +3,11 @@
 #include "json.hpp"
 #include "data_structures.hpp"
 
+#include <string>
 
 using json = nlohmann::json;
 
-json create_output_sensor_data(const sensor_data& sensor_input, const control_data& ctrl_data);
+json create_output_sensor_data(const sensor_data& sensor_input, const control_data& ctrl_data, const std::string& failures);
 
 control_data json_to_control_data(const json& json_elem);
 
