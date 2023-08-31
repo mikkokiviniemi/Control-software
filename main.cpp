@@ -40,10 +40,6 @@ int main()
     //simulation_shm_wrapper sensor_data_input{ std::string{"shm_file"} };
     simulation_shm_wrapper shm{ std::string{"Sim/simulation_shm"} };
     
-    
-    uint16_t failed_sensor_input_validation{ 0 };
-    uint8_t failed_control_input_validation{ 0 };
-
     control_data ctrl_data{0,0,0,0};
     sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0 };
         

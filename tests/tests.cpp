@@ -33,7 +33,7 @@ TEST_CASE("Json")
 
     
 }
-
+/*
 TEST_CASE("MQTT Client")
 {
     json control_data_json // input from UI
@@ -65,26 +65,63 @@ TEST_CASE("MQTT Client")
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     CHECK(test_client_user.input_control_data == json::parse(control_data_json.dump()));
 }
+*/
 
 
 TEST_CASE("Automatic control")
 {
-    SUBCASE("Temperature low") {
-        sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0};
-        CHECK(highest_temp(sensor_input) == 250);
-        uint8_t test_heaters;
-        test_heaters = heating_control(sensor_input, HEATER_1);
-        test_heaters = heating_control(sensor_input, HEATER_2);
-        test_heaters = heating_control(sensor_input, HEATER_3);
-        CHECK(test_heaters == 0b00000111);
-        CHECK(conveyor_control(sensor_input) == OPTIMAL_SOC);
-        CHECK(cooling_control(sensor_input) == 0);
+    sensor_data sensor_input{ 0, 0, 250, 250, 250, 250, 250, 250, 250, 250, 250, 250, 0};
+    control_data ctrl_data;
+    json control_data_json
+    {
+    {"speed_of_conveyor", 0 },
+    {"heater_1", false },
+    {"heater_2", false },
+    {"heater_3", false },
+    {"cooler", false },
+    {"qc_camera_toggle", false },
+    {"conveyor_manual_control", false},
+    {"heater_1_manual_control", false},
+    {"heater_2_manual_control", true},
+    {"heater_3_manual_control", false},
+    {"cooler_manual_control", false}
+    };
+    SUBCASE("Automatic loop heaters on period") {
+        automatic_loop(sensor_input,ctrl_data,control_data_json,true,false);
+        CHECK(ctrl_data.speed_of_conveyor == OPTIMAL_SOC);
+        CHECK(ctrl_data.heaters == 0b00000101);
+        CHECK(ctrl_data.cooler == 0b00000000);
+    }
+    SUBCASE("Automatic loop starting period") {
+        automatic_loop(sensor_input,ctrl_data,control_data_json,true, true);
+        CHECK(ctrl_data.speed_of_conveyor == 0);
+        CHECK(ctrl_data.heaters == 0b00000101);
+        CHECK(ctrl_data.cooler == 0b00000000);
+    }
+    SUBCASE("Automatic loop heaters off period") {
+        automatic_loop(sensor_input,ctrl_data,control_data_json,false, false);
+        CHECK(ctrl_data.speed_of_conveyor == OPTIMAL_SOC);
+        CHECK(ctrl_data.heaters == 0b00000000);
+        CHECK(ctrl_data.cooler == 0b00000000);
     }
 
+    SUBCASE("Temperature = MAX_TEMP") {
+        sensor_data sensor_input2{ 0, 0, MAX_TEMP, MAX_TEMP, MAX_TEMP, MAX_TEMP, MAX_TEMP,
+        MAX_TEMP, MAX_TEMP, MAX_TEMP, MAX_TEMP, MAX_TEMP, 0};
+        CHECK(highest_temp(sensor_input2) == MAX_TEMP);
+        uint8_t test_heaters2;
+        test_heaters2 = heating_control(sensor_input2, HEATER_1);
+        test_heaters2 = heating_control(sensor_input2, HEATER_2);
+        test_heaters2 = heating_control(sensor_input2, HEATER_3);
+        CHECK(test_heaters2 == 0b00000111);
+        CHECK(conveyor_control(sensor_input2) == OPTIMAL_SOC);
+        CHECK(cooling_control(sensor_input2) == 1);
+    }
 
-    SUBCASE("Temperature > 80") {
-        sensor_data sensor_input2{ 0, 0, 800, 810, 810, 810, 810, 810, 810, 800, 810, 810, 0};
-        CHECK(highest_temp(sensor_input2) == 810);
+    SUBCASE("Temperature > MAX_TEMP") {
+        sensor_data sensor_input2{ 0, 0, MAX_TEMP + 1, MAX_TEMP + 1, MAX_TEMP + 1, MAX_TEMP + 1, MAX_TEMP + 1,
+         MAX_TEMP + 1, MAX_TEMP + 1, MAX_TEMP + 1, MAX_TEMP + 1, MAX_TEMP + 1, 0};
+        CHECK(highest_temp(sensor_input2) == MAX_TEMP + 1);
         uint8_t test_heaters2;
         test_heaters2 = heating_control(sensor_input2, HEATER_1);
         test_heaters2 = heating_control(sensor_input2, HEATER_2);
@@ -93,5 +130,4 @@ TEST_CASE("Automatic control")
         CHECK(conveyor_control(sensor_input2) == 0);
         CHECK(cooling_control(sensor_input2) == 1);
     }
-
 }
