@@ -33,7 +33,7 @@ TEST_CASE("Json")
 
     
 }
-/*
+
 TEST_CASE("MQTT Client")
 {
     json control_data_json // input from UI
@@ -65,7 +65,7 @@ TEST_CASE("MQTT Client")
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
     CHECK(test_client_user.input_control_data == json::parse(control_data_json.dump()));
 }
-*/
+
 
 
 TEST_CASE("Automatic control")
