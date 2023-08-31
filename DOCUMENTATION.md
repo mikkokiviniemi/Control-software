@@ -13,7 +13,30 @@ The translated sensor data and current manual/automatic toggle settings are made
 ### Output data to sensors
 Control data received from UI as a string/JSON is converted and given to the sensor simulation through shared memory, and includes conveyor target speed (uint8_t), control toggle of QA camera (uint8_t), toggles for the heaters (one uint8_t) and the cooler (uint8_t). Also, there is a single uint8_t for the shutdown signal of the simulator.
 ### Shared memory interface with convoyer
-TEXT
+Shared memory is accessed by associated file from root folder (source folder) in the path "Sim/simulation_shm". This file association is currently shared with the simulation. This can be changed in the programs main function.
+
+The attachment, detachment and destroying of the shared memory-block is done via a RAII-style wrapper-class. This means that the class itself guarantees the proper allocation and deallocation of the shared memory space. The exit signal is shared between the processes, so that the control-software will give the signal and the simulation will exit when receiving the signal. The currently used mapping of the memory-block is bytes 0 - 27:
+
+/***************SHARED MEMORY SCHEMA***************************
+*  SHM_ptr       = temperature 1         (2 bytes)   (input)  *
+*  SHM_ptr + 2   = temperature 2         (2 bytes)   (input)  *
+*  SHM_ptr + 4   = temperature 3         (2 bytes)   (input)  *
+*  SHM_ptr + 6   = temperature 4         (2 bytes)   (input)  *
+*  SHM_ptr + 8   = temperature 5         (2 bytes)   (input)  *
+*  SHM_ptr + 10  = temperature 6         (2 bytes)   (input)  *
+*  SHM_ptr + 12  = temperature 7         (2 bytes)   (input)  *
+*  SHM_ptr + 14  = temperature 8         (2 bytes)   (input)  *
+*  SHM_ptr + 16  = temperature 9         (2 bytes)   (input)  *
+*  SHM_ptr + 18  = temperature 10        (2 bytes)   (input)  *
+*  SHM_ptr + 20  = conveyor speed sensor (1 byte)    (input)  *
+*  SHM_ptr + 21  = conveyor speed target (1 byte)    (output) *
+*  SHM_ptr + 22  = heaters control       (1 byte)    (output) *
+*  SHM_ptr + 23  = cooler control        (1 byte)    (output) *
+*  SHM_ptr + 24  = camera control        (1 byte)    (output) *
+*  SHM_ptr + 25  = camera data           (2 bytes)   (input)  *
+*  SHM_ptr + 27  = exit signal           (1 byte)    (output) *
+**************************************************************/
+
 ### Automatic (and manual) control
 Goals for automatic control:
 - Tries to maximize product output, while causing nothing to break
