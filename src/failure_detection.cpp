@@ -96,7 +96,7 @@ std::string invalid_control_data(const control_data& ctrl_data)
         failed_string += "camera_control ";
     }
 
-    failed_string += '\n';
+    failed_string += ' ';
 
     return failed_string;
 }
@@ -130,7 +130,8 @@ std::string failure_detection(const control_data& ctrl_data, const sensor_data& 
     }
 
     if (sensor_input.speed_of_conveyor <= previous_sensor.speed_of_conveyor
-        && ctrl_data.speed_of_conveyor > sensor_input.speed_of_conveyor)
+        && ctrl_data.speed_of_conveyor > sensor_input.speed_of_conveyor
+        && rounds_of_conveyor_anomalies <= 20 )
     {
             ++rounds_of_conveyor_anomalies;
     }
@@ -145,13 +146,13 @@ std::string failure_detection(const control_data& ctrl_data, const sensor_data& 
     possible_failures += invalid_control_data(ctrl_data);
     possible_failures += failed_temp_sensors(sensor_input);
 
-    if (rounds_of_conveyor_anomalies >= 5)
+    if (rounds_of_conveyor_anomalies >= 20)
     {
-        possible_failures += "conveyor possibly faulty\n";
+        possible_failures += "conveyor possibly faulty ";
     }
     if (rounds_of_temperature_anomalies >= 5)
     {
-        possible_failures += "heaters and/or cooler possibly faulty\n";
+        possible_failures += "heaters and/or cooler possibly faulty ";
     }
 
     previous_ctrl = ctrl_data;

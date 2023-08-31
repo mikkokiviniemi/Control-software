@@ -107,7 +107,7 @@ int main()
         heater_period_timing(start_time, heater_timing, heater_period, start_period);
         automatic_loop(sensor_input, ctrl_data, control_data_json, heater_period, start_period);
 
-        failures = failure_detection(ctrl_data, sensor_input);
+        // failures = failure_detection(ctrl_data, sensor_input);
 
         std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
