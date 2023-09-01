@@ -62,7 +62,7 @@ Shared memory is accessed by associated file from root folder (source folder) in
 
 The attachment, detachment and destroying of the shared memory-block is done via a RAII-style wrapper-class. This means that the class itself guarantees the proper allocation and deallocation of the shared memory space. The exit signal is shared between the processes, so that the control-software will give the signal and the simulation will exit when receiving the signal. The currently used mapping of the memory-block is bytes 0 - 27:
 
-/***************SHARED MEMORY SCHEMA**************************
+## SHARED MEMORY SCHEMA
 
 * SHM_ptr       = temperature 1         (2 bytes)   (input)  *
 * SHM_ptr + 2   = temperature 2         (2 bytes)   (input)  *
@@ -81,7 +81,6 @@ The attachment, detachment and destroying of the shared memory-block is done via
 * SHM_ptr + 24  = camera control        (1 byte)    (output) *
 * SHM_ptr + 25  = camera data           (2 bytes)   (input)  *
 * SHM_ptr + 27  = exit signal           (1 byte)    (output) *
-*************************************************************/
 
 ### Automatic (and manual) control
 
